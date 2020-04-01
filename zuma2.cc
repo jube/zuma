@@ -124,7 +124,7 @@ int main() {
 
   //Initialisation de la grenouille ainsi que de sa position au centre du plateau
   Grenouille grenouille;
-  grenouille.posGre.width = grenouille.posGre.height = 64;
+  grenouille.posGre.width = 64;
   grenouille.posGre.x = (SCREENW - grenouille.posGre.width/2) / 2;
   grenouille.posGre.y = (SCREENH - grenouille.posGre.height/2) / 2 ;
   grenouille.color = Color::Green;
@@ -147,10 +147,10 @@ int main() {
   bool gagne;
 
   //Constante modélisant la vitesse des billes sur le circuit
-  const int SPEED=100;
+  const int SPEED=70;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
-  const int speedLance=150;
+  const int SPEEDLANCE=300;
 
   //Diamètre de la bille
   const int DIAMBILLE=10;
@@ -176,6 +176,16 @@ int main() {
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
+  billeLance.posBille.width = 10;
+  billeLance.posBille.x = SCREENW / 2;
+  billeLance.posBille.y = SCREENH / 2;
+  billeLance.color = Color::Black;
+
+  bool deplacer = false;
+  double initx = SCREENW / 2;
+  double inity = SCREENH / 2;
+  double sourisx = 0;
+  double sourisy = 0;
 
   for (int i = 0; i < nBilles; ++i) {
       tabBille[i].posBille.x = 20*i;
@@ -198,6 +208,12 @@ int main() {
         window.close();
       }
 
+      if ((event.type == sf::Event::MouseButtonPressed)&&(deplacer==false)){
+        deplacer=true;
+        sourisx = event.mouseButton.x;
+        sourisy = event.mouseButton.y;
+      }
+
       //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
       if (event.key.code == sf::Keyboard::Escape){
         Color echange = grenouille.lance.color;
@@ -210,12 +226,25 @@ int main() {
 
     float dt = clock.restart().asSeconds();
     double distance = SPEED*dt;
+    double distanceLance = SPEEDLANCE *dt;
+    double hyp ;
 
     for (int i = 0; i < nBilles; ++i) {
       tabBille[i].posBille.x += distance ;
      // tabBille[i].posBille.y += distance;
     }
+    
+    if (deplacer){
+      if ((billeLance.posBille.x<0 )||(billeLance.posBille.x + billeLance.posBille.width > 800)||(billeLance.posBille.y<0 )||(billeLance.posBille.y + billeLance.posBille.width > 600)){
+      billeLance.posBille.x = initx;
+      billeLance.posBille.y = inity;
+      deplacer = false;
+      }
+      hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
+      billeLance.posBille.x+= ((sourisx-initx)/hyp)*distanceLance;
+      billeLance.posBille.y+= ((sourisy-inity)/hyp)*distanceLance;
 
+    }
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
@@ -234,6 +263,11 @@ int main() {
     window.draw(shape);
     }
       
+    CircleShape lancer(billeLance.posBille.width);
+    lancer.setPosition(billeLance.posBille.x-billeLance.posBille.width, billeLance.posBille.y-billeLance.posBille.width);
+    lancer.setFillColor(billeLance.color);
+    window.draw(lancer);
+
     window.display();
   }//fin de la while de window.isOpen
   return 0;
