@@ -79,7 +79,7 @@ int randomColor(int n) {
 *
 *@return color Caractère tiré au hasard dans le tableau
 */
-char asChar(int i, char tabCol[4]) {
+char asChar(int i, char tabCol[]) {
   char color = tabCol[i];
   return color;
 }
@@ -115,14 +115,14 @@ Color assignementCol(char charColor) {
 }
 
 //FOnction pour la couleur aléatoire 
-Color getRandomCol(int n, char tabCol[4]) {
+Color getRandomCol(int n, char tabCol[]) {
   int i = randomColor(n);
-  char color = asChar(i, tabCol[4]);
+  char color = asChar(i, tabCol);
   return assignementCol(color);
 }
 
 bool collision(Bille bille1, Bille bille2) {
-  return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
+return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
            bille1.posBille.x >= bille2.posBille.x + bille2.posBille.width ||
            bille1.posBille.y + bille1.posBille.width <= bille2.posBille.y ||
            bille1.posBille.y >= bille2.posBille.y + bille2.posBille.width);
