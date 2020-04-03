@@ -66,7 +66,7 @@ struct Grenouille{
 *@return i Un entier tiré au hasard dans le nombre de *couleurs restantes
 */
 int randomColor(int n) {
-  int i = ((int)(Math::random()*(n-1)));
+  int i = ((int)(Math::random()*(n)));
   return i;
 }
 
@@ -79,7 +79,7 @@ int randomColor(int n) {
 *
 *@return color Caractère tiré au hasard dans le tableau
 */
-char asChar(int i, char tabCol[4]) {
+char asChar(int i, char tabCol[]) {
   char color = tabCol[i];
   return color;
 }
@@ -115,11 +115,12 @@ Color assignementCol(char charColor) {
 }
 
 //FOnction pour la couleur aléatoire 
-Color getRandomCol(int n, char tabCol[4]) {
+Color getRandomCol(int n, char tabCol[]) {
   int i = randomColor(n);
-  char color = asChar(i, tabCol[4]);
+  char color = asChar(i, tabCol);
   return assignementCol(color);
 }
+
 
 bool collision(Bille bille1, Bille bille2) {
   return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
@@ -189,11 +190,11 @@ int main() {
   //Initialisation des couleurs dans chaque case du tableau
   tabCol[0] = 'r';
   tabCol[1] = 'j';
-  tabCol[2] = 'v';
-  tabCol[3] = 'b';
+  tabCol[2] = 'b';
+  tabCol[3] = 'v';
 
   //Nombre de couleur(s) restante(s) sur le circuit 
-  int n;
+  int n = 4;
 
   //Tableau répertoriant toutes les billes présentes sur le circuit
   Bille tabBille[NBILLESINIT];
@@ -215,7 +216,7 @@ int main() {
       tabBille[i].posBille.x = 100-(20*i);
       tabBille[i].posBille.y = 10;
       tabBille[i].posBille.width = DIAMBILLE;
-      tabBille[i].color = Color::Red;
+      tabBille[i].color = getRandomCol(n, tabCol);
   }
 
 
