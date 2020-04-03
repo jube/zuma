@@ -114,6 +114,23 @@ Color assignementCol(char charColor) {
   return color;
 }
 
+bool collision(Bille bille1, Bille bille2) {
+  return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
+           bille1.posBille.x >= bille2.posBille.x + bille2.posBille.width ||
+           bille1.posBille.y + bille1.posBille.width <= bille2.posBille.y ||
+           bille1.posBille.y >= bille2.posBille.y + bille2.posBille.width);
+}
+
+void incruster(Bille tabBille[],int i, int nBilles){
+  for (int k = nBilles; k>0 ; --k){
+    tabBille[k].posBille.x = tabBille[k-1].posBille.x;
+    tabBille[k].posBille.y = tabBille[k-1].posBille.y;
+    tabBille[k].posBille.width = tabBille[0].posBille.width;
+    tabBille[k].color = Color::Black;
+  }
+  tabBille[0].posBille.x +=tabBille[0].posBille.width*2;
+}
+
 
 int main() {
   
@@ -132,11 +149,11 @@ int main() {
   ////VARIABLES////
   //Les constantes sont initiées au hasard pr que ça compile c'est a changer
   //constante nb de bille crées en début de partie
-  const int NBILLESINIT=10;
+  const int NBILLESINIT=100;
 
   //nb de billes restantes sur le circuit 
   //ititialisé grace a la constante 
-  int nBilles=NBILLESINIT;
+  int nBilles=10;
 
   //vrai quand l'utilisateur a perdu:une bille atteint fin circuit 
   //si vrai jeu s'arrete
@@ -172,7 +189,7 @@ int main() {
   int n;
 
   //Tableau répertoriant toutes les billes présentes sur le circuit
-  Bille tabBille[nBilles];
+  Bille tabBille[NBILLESINIT];
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
@@ -188,7 +205,7 @@ int main() {
   double sourisy = 0;
 
   for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].posBille.x = 20*i;
+      tabBille[i].posBille.x = 100-(20*i);
       tabBille[i].posBille.y = 10;
       tabBille[i].posBille.width = DIAMBILLE;
       tabBille[i].color = Color::Black;
@@ -240,11 +257,22 @@ int main() {
       billeLance.posBille.y = inity;
       deplacer = false;
       }
+      
+      for (int j = 0;j<nBilles; ++j){
+        if(collision(billeLance, tabBille[j])){
+	  billeLance.posBille.x = initx;
+          billeLance.posBille.y = inity;
+          ++nBilles;
+          incruster(tabBille, j, nBilles);
+	  deplacer = false;
+        }
+       }
+
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
       billeLance.posBille.x+= ((sourisx-initx)/hyp)*distanceLance;
       billeLance.posBille.y+= ((sourisy-inity)/hyp)*distanceLance;
-
     }
+
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
@@ -256,7 +284,7 @@ int main() {
     
 
     //C'est pour afficher les billes ? 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < nBilles; ++i) {
     CircleShape shape(tabBille[i].posBille.width);
     shape.setPosition(tabBille[i].posBille.x, tabBille[i].posBille.y);
     shape.setFillColor(tabBille[i].color);
