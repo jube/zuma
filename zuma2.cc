@@ -123,7 +123,7 @@ Color getRandomCol(int n, char tabCol[]) {
 
 
 bool collision(Bille bille1, Bille bille2) {
-  return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
+return !(bille1.posBille.x + bille1.posBille.width <= bille2.posBille.x ||
            bille1.posBille.x >= bille2.posBille.x + bille2.posBille.width ||
            bille1.posBille.y + bille1.posBille.width <= bille2.posBille.y ||
            bille1.posBille.y >= bille2.posBille.y + bille2.posBille.width);
