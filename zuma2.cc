@@ -15,19 +15,12 @@ struct Math {
   }
 };
 
-/**
-*
-*@param Structure permettant de donner la position et la dimension d'un objet
-*@param x : l'abscisse d'un objet
-*@param y : l'ordonnée d'un objet 
-*@param width : //peut être changer directement dans la structure et juste mettre le diamètre ? 
-*@param height :
-*/
+
 struct PosDim {
   float x;
   float y;
-  int width;
-  int height;
+  int rayon;
+  int centre;
 };
 
 /**
@@ -36,9 +29,16 @@ struct PosDim {
 *
 *@param posDimBille La variable de type PosDim qui donne les *coordonnées sur le plateau d'une bille ainsi que sa dimension
 *@param color La variable de type Color qui donne la couleur d'une bille
+*@param x : l'abscisse d'un objet
+*@param y : l'ordonnée d'un objet 
+*@param rayon : le rayon d'un cercle
+*@param centre :
 */
 struct Bille {
-  PosDim posBille;
+  float x;
+  float y;
+  int rayon;
+  int centre;
   Color color;
 };
 
@@ -51,7 +51,9 @@ struct Bille {
 *@param reserve La bille en réserve (la bille qui sera *lancée par l'utilisateur après qu'il ait utilisé la bille lance)
 */
 struct Grenouille{
-  PosDim posGre;
+  float x;
+  float y;
+  int rayon;
   Color color ;
   Bille lance;
   Bille reserve;
@@ -123,17 +125,17 @@ Color getRandomCol(int n, char tabCol[]) {
 
 
 bool collision(Bille bille1, Bille bille2) {
-  return !( ((bille1.posBille.width + bille2.posBille.width)*(bille1.posBille.width + bille2.posBille.width)) <= (bille1.posBille.x + bille1.posBille.width - bille2.posBille.x + bille2.posBille.width)*(bille1.posBille.x + bille1.posBille.width - bille2.posBille.x + bille2.posBille.width) + (bille1.posBille.y + bille1.posBille.width - bille2.posBille.y +bille2.posBille.width)*(bille1.posBille.y + bille1.posBille.width - bille2.posBille.y +bille2.posBille.width) );
+  return !( ((bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon)) <= (bille1.x + bille1.rayon - bille2.x + bille2.rayon)*(bille1.x + bille1.rayon - bille2.x + bille2.rayon) + (bille1.y + bille1.rayon bille1.rayon - bille2.y +bille2.rayon) );
 }
 
 void incruster(Bille tabBille[],int i, int nBilles){
   for (int k = nBilles; k>0 ; --k){
-    tabBille[k].posBille.x = tabBille[k-1].posBille.x;
-    tabBille[k].posBille.y = tabBille[k-1].posBille.y;
-    tabBille[k].posBille.width = tabBille[0].posBille.width;
+    tabBille[k].x = tabBille[k-1].x;
+    tabBille[k].y = tabBille[k-1].y;
+    tabBille[k].rayon = tabBille[0].rayon;
     tabBille[k].color = Color::Black;
   }
-  tabBille[0].posBille.x +=tabBille[0].posBille.width*2;
+  tabBille[0].x +=tabBille[0].rayon*2;
 }
 
 
@@ -146,9 +148,9 @@ int main() {
 
   //Initialisation de la grenouille ainsi que de sa position au centre du plateau
   Grenouille grenouille;
-  grenouille.posGre.width = 64;
-  grenouille.posGre.x = (SCREENW - grenouille.posGre.width/2) / 2;
-  grenouille.posGre.y = (SCREENH - grenouille.posGre.height/2) / 2 ;
+  grenouille.rayon = 64;
+  grenouille.x = (SCREENW - grenouille.rayon/2) / 2;
+  grenouille.y = (SCREENH - grenouille.rayon/2) / 2 ;
   grenouille.color = Color::Green;
 
   ////VARIABLES////
@@ -198,9 +200,9 @@ int main() {
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
-  billeLance.posBille.width = 10;
-  billeLance.posBille.x = SCREENW / 2;
-  billeLance.posBille.y = SCREENH / 2;
+  billeLance.rayon = 10;
+  billeLance.x = SCREENW / 2;
+  billeLance.y = SCREENH / 2;
   billeLance.color = Color::Black;
 
   bool deplacer = false;
@@ -210,9 +212,9 @@ int main() {
   double sourisy = 0;
 
   for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].posBille.x = 100-(20*i);
-      tabBille[i].posBille.y = 10;
-      tabBille[i].posBille.width = DIAMBILLE;
+      tabBille[i].x = 100-(20*i);
+      tabBille[i].y = 10;
+      tabBille[i].rayon = DIAMBILLE/2;
       tabBille[i].color = getRandomCol(n, tabCol);
   }
 
@@ -252,21 +254,21 @@ int main() {
     double hyp ;
 
     for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].posBille.x += distance ;
+      tabBille[i].x += distance ;
      // tabBille[i].posBille.y += distance;
     }
     
     if (deplacer){
-      if ((billeLance.posBille.x<0 )||(billeLance.posBille.x + billeLance.posBille.width > 800)||(billeLance.posBille.y<0 )||(billeLance.posBille.y + billeLance.posBille.width > 600)){
-      billeLance.posBille.x = initx;
-      billeLance.posBille.y = inity;
+      if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
+      billeLance.x = initx;
+      billeLance.y = inity;
       deplacer = false;
       }
       
       for (int j = 0;j<nBilles; ++j){
         if(collision(billeLance, tabBille[j])){
-	  billeLance.posBille.x = initx;
-          billeLance.posBille.y = inity;
+	  billeLance.x = initx;
+          billeLance.y = inity;
           ++nBilles;
           incruster(tabBille, j, nBilles);
 	  deplacer = false;
@@ -274,30 +276,30 @@ int main() {
        }
 
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
-      billeLance.posBille.x+= ((sourisx-initx)/hyp)*distanceLance;
-      billeLance.posBille.y+= ((sourisy-inity)/hyp)*distanceLance;
+      billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
+      billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
 
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
     //Affichage grenouille:
-    CircleShape shape(grenouille.posGre.width);
-    shape.setPosition(grenouille.posGre.x -grenouille.posGre.width, grenouille.posGre.y-grenouille.posGre.width);
+    CircleShape shape(grenouille.rayon);
+    shape.setPosition(grenouille.x -grenouille.rayon, grenouille.y-grenouille.rayon);
     shape.setFillColor(grenouille.color);
     window.draw(shape);
     
 
     //C'est pour afficher les billes ? 
     for (int i = 0; i < nBilles; ++i) {
-    CircleShape shape(tabBille[i].posBille.width);
-    shape.setPosition(tabBille[i].posBille.x, tabBille[i].posBille.y);
+    CircleShape shape(tabBille[i].rayon);
+    shape.setPosition(tabBille[i].x, tabBille[i].y);
     shape.setFillColor(tabBille[i].color);
     window.draw(shape);
     }
       
-    CircleShape lancer(billeLance.posBille.width);
-    lancer.setPosition(billeLance.posBille.x-billeLance.posBille.width, billeLance.posBille.y-billeLance.posBille.width);
+    CircleShape lancer(billeLance.rayon);
+    lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
     lancer.setFillColor(billeLance.color);
     window.draw(lancer);
 
