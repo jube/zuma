@@ -15,14 +15,6 @@ struct Math {
   }
 };
 
-
-struct PosDim {
-  float x;
-  float y;
-  int rayon;
-  int centre;
-};
-
 /**
 *
 *Structure permettant de modéliser une bille 
@@ -38,7 +30,6 @@ struct Bille {
   float x;
   float y;
   int rayon;
-  int centre;
   Color color;
 };
 
@@ -125,7 +116,7 @@ Color getRandomCol(int n, char tabCol[]) {
 
 
 bool collision(Bille bille1, Bille bille2) {
-  return !( ((bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon)) <= (bille1.x + bille1.rayon - bille2.x + bille2.rayon)*(bille1.x + bille1.rayon - bille2.x + bille2.rayon) + (bille1.y + bille1.rayon bille1.rayon - bille2.y +bille2.rayon) );
+  return !( (bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon) <= (bille1.x - bille2.x)*(bille1.x - bille2.x) + (bille1.y - bille2.y)*(bille1.y - bille2.y) );
 }
 
 void incruster(Bille tabBille[],int i, int nBilles){
@@ -177,7 +168,7 @@ int main() {
   const int SPEEDLANCE=300;
 
   //Diamètre de la bille
-  const int DIAMBILLE=10;
+  const int DIAMBILLE=20;
 
   //longueur et hauteur du plateau
   const int longueur=500;
