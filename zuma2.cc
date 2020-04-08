@@ -145,7 +145,7 @@ int main() {
   grenouille.rayon = 64;
   grenouille.x = (SCREENW - grenouille.rayon/2) / 2;
   grenouille.y = (SCREENH - grenouille.rayon/2) / 2 ;
-  grenouille.color = Color::Green;
+  grenouille.color = Color::Black;
 
   ////VARIABLES////
   //Les constantes sont initiées au hasard pr que ça compile c'est a changer
@@ -198,6 +198,13 @@ int main() {
   billeLance.x = SCREENW / 2;
   billeLance.y = SCREENH / 2;
   billeLance.color = getRandomCol(n, tabCol);
+
+  Bille billeReserve;
+  billeReserve.rayon = 10;
+  billeReserve.x = (SCREENW-40) / 2;
+  billeReserve.y = (SCREENH-40) / 2;
+  billeReserve.color = getRandomCol(n, tabCol);
+
 
   bool deplacer = false;
   double initx = SCREENW / 2;
@@ -299,6 +306,11 @@ int main() {
     lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
     lancer.setFillColor(billeLance.color);
     window.draw(lancer);
+
+    CircleShape reserve(billeReserve.rayon);
+    reserve.setPosition(billeReserve.x-billeReserve.rayon, billeReserve.y-billeReserve.rayon);
+    reserve.setFillColor(billeReserve.color);
+    window.draw(reserve);
 
     window.display();
   }//fin de la while de window.isOpen
