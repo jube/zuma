@@ -197,7 +197,7 @@ int main() {
   billeLance.rayon = 10;
   billeLance.x = SCREENW / 2;
   billeLance.y = SCREENH / 2;
-  billeLance.color = Color::Black;
+  billeLance.color = getRandomCol(n, tabCol);
 
   bool deplacer = false;
   double initx = SCREENW / 2;
@@ -257,15 +257,18 @@ int main() {
       billeLance.x = initx;
       billeLance.y = inity;
       deplacer = false;
+      billeLance.color = getRandomCol(n, tabCol);
       }
       
       for (int j = 0;j<nBilles; ++j){
         if(collision(billeLance, tabBille[j])){
 	  billeLance.x = initx;
           billeLance.y = inity;
+	  billeLance.color = getRandomCol(n, tabCol);
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
 	  deplacer = false;
+	  
         }
        }
 
