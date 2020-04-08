@@ -241,10 +241,12 @@ int main() {
       }
 
       //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
-      if (event.key.code == sf::Keyboard::Space){
+      if (event.type == Event::KeyPressed) {
+	 if (event.key.code == sf::Keyboard::Space){
            Color echange = billeLance.color;
 	      billeLance.color= billeReserve.color;
 	      billeReserve.color=echange;
+	 }
       }
 
     }//fin de while window.pollEvent
