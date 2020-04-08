@@ -206,6 +206,7 @@ int main() {
   billeReserve.color = getRandomCol(n, tabCol);
 
 
+
   bool deplacer = false;
   double initx = SCREENW / 2;
   double inity = SCREENH / 2;
@@ -240,10 +241,10 @@ int main() {
       }
 
       //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
-      if (event.key.code == sf::Keyboard::Escape){
-        Color echange = grenouille.lance.color;
-	      grenouille.lance.color=grenouille.reserve.color;
-	      grenouille.reserve.color=echange;
+      if (event.key.code == sf::Keyboard::Space){
+           Color echange = billeLance.color;
+	      billeLance.color= billeReserve.color;
+	      billeReserve.color=echange;
       }
 
     }//fin de while window.pollEvent
