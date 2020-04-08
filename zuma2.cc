@@ -119,14 +119,17 @@ bool collision(Bille bille1, Bille bille2) {
   return !( (bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon) <= (bille1.x - bille2.x)*(bille1.x - bille2.x) + (bille1.y - bille2.y)*(bille1.y - bille2.y) );
 }
 
-void incruster(Bille tabBille[],int i, int nBilles){
-  for (int k = nBilles; k>0 ; --k){
+void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
+  for (int k = nBilles-1; k>0 ; --k){
     tabBille[k].x = tabBille[k-1].x;
     tabBille[k].y = tabBille[k-1].y;
     tabBille[k].rayon = tabBille[0].rayon;
-    tabBille[k].color = Color::Black;
   }
   tabBille[0].x +=tabBille[0].rayon*2;
+  for(int j = nBilles-1 ; j>i+1 ; --j){
+    tabBille[j].color=tabBille[j-1].color;
+  }
+  tabBille[i+1].color = billeLance.color;
 }
 
 
@@ -162,7 +165,7 @@ int main() {
   bool gagne;
 
   //Constante modélisant la vitesse des billes sur le circuit
-  const int SPEED=70;
+  const int SPEED=10;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=300;
@@ -261,7 +264,7 @@ int main() {
 	  billeLance.x = initx;
           billeLance.y = inity;
           ++nBilles;
-          incruster(tabBille, j, nBilles);
+          incruster(billeLance, tabBille, j, nBilles);
 	  deplacer = false;
         }
        }
