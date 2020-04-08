@@ -29,7 +29,7 @@ struct Math {
 struct Bille {
   float x;
   float y;
-  int rayon;
+  float rayon;
   Color color;
 };
 
@@ -44,7 +44,7 @@ struct Bille {
 struct Grenouille{
   float x;
   float y;
-  int rayon;
+  float rayon;
   Color color ;
   Bille lance;
   Bille reserve;
@@ -65,29 +65,15 @@ int randomColor(int n) {
 
 /**
 *
-*Fonction permettant d'assigner un entier à une couleur
-*
-*@param i Entier tiré au hasard dans la fonction randomColor(n)
-*@param tabCol[4] Tableau où sont répertoriées toutes les *couleurs représentées par des caractères
-*
-*@return color Caractère tiré au hasard dans le tableau
-*/
-char asChar(int i, char tabCol[]) {
-  char color = tabCol[i];
-  return color;
-}
-
-/**
-*
 *Fonction permettant d'associer un caractère à une couleur
 *
 *@param charColor Un caractère déterminé par la fonction assignementChar(i, tabcol[4])
 *
 *@return color Une couleur associée au caractère charColor
 */
-Color assignementCol(char charColor) {
+Color assignementCol(char col) {
   Color color;
-  switch(charColor) {
+  switch(col) {
     case 'r' :
         color = Color::Red;
     break;
@@ -110,8 +96,8 @@ Color assignementCol(char charColor) {
 //FOnction pour la couleur aléatoire 
 Color getRandomCol(int n, char tabCol[]) {
   int i = randomColor(n);
-  char color = asChar(i, tabCol);
-  return assignementCol(color);
+  char color = tabCol[i];
+  return (assignementCol(color));
 }
 
 
