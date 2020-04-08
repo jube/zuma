@@ -160,8 +160,8 @@ int main() {
   const int DIAMBILLE=20;
 
   //longueur et hauteur du plateau
-  const int longueur=500;
-  const int hauteur=500;
+  const int LONGUEUR=500;
+  const int HAUTEUR=500;
 
   //caracters associes aux couleurs
   //faut utiliser une constante pr la taille
