@@ -262,11 +262,11 @@ int main() {
       
       for (int j = 0;j<nBilles; ++j){
         if(collision(billeLance, tabBille[j])){
-	  billeLance.x = initx;
-          billeLance.y = inity;
-	  billeLance.color = getRandomCol(n, tabCol);
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
+          billeLance.x = initx;
+          billeLance.y = inity;
+	  billeLance.color = getRandomCol(n, tabCol);
 	  deplacer = false;
 	  
         }
