@@ -133,14 +133,14 @@ int explosion(int j, Bille tabBille[], int nBilles) {
   while((tabBille[j+compt1+1].color == tabBille[j].color) && (j+compt1<nBilles)) {
 	++compt1;
 	  }
-  while((tabBille[j-compt2-1].color == tabBille[j].color) && (j-compt2>=0)) {
-	++compt2;
+  while((tabBille[j+compt2+1].color == tabBille[j].color) && (j+compt2>=0)) {
+	--compt2;
 	  }
   if(compt1-compt2>1) {
 	for(int i = j; i<=j+compt1; i++) {
 		tabBille[i].color = Color::Black;
 	}
-	for(int k = j; k>=j-compt2; k--) {
+	for(int k = j; k>=j+compt2; k--) {
 		tabBille[k].color = Color::Black;
 	}
   }
