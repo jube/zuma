@@ -128,17 +128,18 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 
 //Le Color::Black ne sert qu'à des tests
 void explosion(int j, Bille tabBille[], int compt1, int compt2, int nBilles, Bille billeLance) {
-  while(tabBille[j+compt1+1].color == billeLance.color && j+compt1<nBilles) {
+  j=j+1;
+  while((tabBille[j+compt1+1].color == billeLance.color) && ( j+compt1<nBilles)) {
 	++compt1;
 	  }
-  while(tabBille[j-compt2-1].color == billeLance.color && j-compt2>=0) {
-	++compt2;
+  while((tabBille[j-compt2+1].color == billeLance.color) && (j-compt2>=0)) {
+	--compt2;
 	  }
-  if(compt1+compt2>1) {
+  if(compt1-compt2>1) {
 	for(int i = j; i<=j+compt1; i++) {
 		tabBille[i].color = Color::Black;
 	}
-	for(int k = j; k>=j-compt2; k--) {
+	for(int k = j; k>=j+compt2; k--) {
 		tabBille[k].color = Color::Black;
 	}
   }
