@@ -106,16 +106,16 @@ bool collision(Bille bille1, Bille bille2) {
 }
 
 void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
-  for (int k = nBilles-1; k>0 ; --k){
-    tabBille[k].x = tabBille[k-1].x;
-    tabBille[k].y = tabBille[k-1].y;
-    tabBille[k].rayon = tabBille[0].rayon;
-  }
-  tabBille[0].x +=tabBille[0].rayon*2;
-  for(int j = nBilles-1 ; j>i+1 ; --j){
-    tabBille[j].color=tabBille[j-1].color;
+  for(int j = nBilles-1 ; j>i ; --j){
+    tabBille[j]=tabBille[j-1];
   }
   tabBille[i+1].color = billeLance.color;
+
+  for (int k = i; k>0 ; --k){
+    tabBille[k].x = tabBille[k-1].x;
+    tabBille[k].y = tabBille[k-1].y;
+  }
+  tabBille[0].x +=tabBille[0].rayon*2;
 }
 
 //Le Color::Black ne sert qu'à des tests
