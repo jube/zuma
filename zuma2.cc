@@ -93,7 +93,15 @@ Color assignementCol(char col) {
   return color;
 }
 
-//FOnction pour la couleur aléatoire 
+/**
+*
+*Fonction permettant de tirer une couleur aléatoire
+*
+*@param n Un entier, le nombre de couleur encore disponible dans le circuit
+*@param  tabCol un tableau de caractères représentants les couleurs existantes 
+*
+*@return Une couleur tirée au hasard parmi celles encore disponibles
+*/
 Color getRandomCol(int n, char tabCol[]) {
   int i = randomColor(n);
   char color = tabCol[i];
@@ -246,14 +254,17 @@ int main() {
         deplacer=true;
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
+        Color echange = billeLance.color;
+	    billeLance.color= billeReserve.color;
+	    billeReserve.color=echange;
       }
 
       //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
       if (event.type == Event::KeyPressed) {
 	 if (event.key.code == sf::Keyboard::Space){
            Color echange = billeLance.color;
-	      billeLance.color= billeReserve.color;
-	      billeReserve.color=echange;
+	       billeLance.color= billeReserve.color;
+	       billeReserve.color=echange;
 	 }
       }
 
@@ -272,22 +283,21 @@ int main() {
     
     if (deplacer){
       if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
-      billeLance.x = initx;
-      billeLance.y = inity;
-      deplacer = false;
-      billeLance.color = getRandomCol(n, tabCol);
+      	billeLance.x = initx;
+      	billeLance.y = inity;
+     	deplacer = false;
+     	billeLance.color = getRandomCol(n, tabCol);
       }
       
       for (int j = 0;j<nBilles; ++j){
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  explosion(j, tabBille, compt1, compt2, nBilles, billeLance);
+	  	  explosion(j, tabBille, compt1, compt2, nBilles, billeLance);
           billeLance.x = initx;
           billeLance.y = inity;
-	  billeLance.color = getRandomCol(n, tabCol);
-	  deplacer = false;
-	  
+	  	  billeLance.color = getRandomCol(n, tabCol);
+	 	  deplacer = false;
         }
        }
 
@@ -306,12 +316,12 @@ int main() {
     window.draw(shape);
     
 
-    //C'est pour afficher les billes ? 
+	//Affichage billes:
     for (int i = 0; i < nBilles; ++i) {
-    CircleShape shape(tabBille[i].rayon);
-    shape.setPosition(tabBille[i].x, tabBille[i].y);
-    shape.setFillColor(tabBille[i].color);
-    window.draw(shape);
+   		CircleShape shape(tabBille[i].rayon);
+    	shape.setPosition(tabBille[i].x, tabBille[i].y);
+    	shape.setFillColor(tabBille[i].color);
+    	window.draw(shape);
     }
       
     CircleShape lancer(billeLance.rayon);
