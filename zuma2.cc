@@ -156,29 +156,16 @@ void disparaitre2(int j, int compt1, int compt2, int nBilles, Bille tabBille[]) 
 int explosion(int j, Bille tabBille[], int nBilles) {
   int compt1 = 0;
   int compt2 = 0;
-  while((tabBille[j+compt1].color == tabBille[j].color) && (j+compt1<nBilles)) {
+  if (tabBille[j+1].color == tabBille[j].color){
+    while((tabBille[j+compt1].color == tabBille[j].color) && (j+compt1<nBilles)) {
 	++compt1;
-	  }
-  while((tabBille[j+compt2].color == tabBille[j].color) && (j+compt2>=0)) {
-	--compt2;
-	  }
-  if(compt1-compt2>1) {
-	disparaitre(j, compt1, compt2, nBilles, tabBille);
+    }
   }
-  return (nBilles-(compt1-compt2+1));
-}
-
-
-//Le Color::Black ne sert qu'à des tests
-int explosion(int j, Bille tabBille[], int nBilles) {
-  int compt1 = 1;
-  int compt2 = 1;
-  while((tabBille[j+compt1+1].color == tabBille[j].color) && (j+compt1<nBilles)) {
-	++compt1;
-	  }
-  while((tabBille[j+compt2+1].color == tabBille[j].color) && (j+compt2>=0)) {
+  if (tabBille[j-1].color == tabBille[j].color){
+    while((tabBille[j+compt2].color == tabBille[j].color) && (j+compt2>=0)) {
 	--compt2;
-	  }
+    }
+  }
   if(compt1-compt2>1) {
 	disparaitre(j, compt1, compt2, nBilles, tabBille);
   }
