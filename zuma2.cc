@@ -127,14 +127,16 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 }
 
 //Le Color::Black ne sert qu'à des tests
-void explosion(int j, Bille tabBille[], int compt1, int compt2, int nBilles, Bille billeLance) {
-  while(tabBille[j+compt1+1].color == billeLance.color && j+compt1<nBilles) {
+int explosion(int j, Bille tabBille[], int nBilles) {
+  int compt1 = 1;
+  int compt2 = 1;
+  while((tabBille[j+compt1+1].color == tabBille[j].color) && (j+compt1<nBilles)) {
 	++compt1;
 	  }
-  while(tabBille[j-compt2-1].color == billeLance.color && j-compt2>=0) {
+  while((tabBille[j-compt2-1].color == tabBille[j].color) && (j-compt2>=0)) {
 	++compt2;
 	  }
-  if(compt1+compt2>1) {
+  if(compt1-compt2>1) {
 	for(int i = j; i<=j+compt1; i++) {
 		tabBille[i].color = Color::Black;
 	}
@@ -142,6 +144,7 @@ void explosion(int j, Bille tabBille[], int compt1, int compt2, int nBilles, Bil
 		tabBille[k].color = Color::Black;
 	}
   }
+  return (nBilles-(compt1+compt2+1));
 }
 
 
@@ -200,10 +203,6 @@ int main() {
 
   //Nombre de couleur(s) restante(s) sur le circuit 
   int n = 4;
-
-  //Compteurs pour les explosions
-  int compt1 = 0;
-  int compt2 = 0;
 
   //Tableau répertoriant toutes les billes présentes sur le circuit
   Bille tabBille[NBILLESINIT];
@@ -293,7 +292,7 @@ int main() {
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  	  explosion(j, tabBille, compt1, compt2, nBilles, billeLance);
+	  explosion(j, tabBille, nBilles);
           billeLance.x = initx;
           billeLance.y = inity;
 	  	  billeLance.color = getRandomCol(n, tabCol);
