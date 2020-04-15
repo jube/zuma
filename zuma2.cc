@@ -135,42 +135,33 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 }
 
 
-//Fonction qui permet de faire disparaître des billes
-void disparaitre(int j, int compt1, int compt2, int nBilles, Bille tabBille[]) {
- for (int i = 0; i <nBilles-compt1+compt2;i++){
-   tabBille[j+compt2+i]=tabBille[j+compt1+1+i];
+void disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
+ for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
+   tabBille[borne2+i]=tabBille[borne1+1+i];
  }
-}
-
-//Fonction qui permet de faire disparaître des billes
-void disparaitre2(int j, int compt1, int compt2, int nBilles, Bille tabBille[]) {
-	int k = 0;
-	for(int i = j+compt1+1; i<nBilles; i++) {
-		tabBille[j+compt2+k]= tabBille[i];
-		++k;
-	}
 }
 
 
 //Le Color::Black ne sert qu'à des tests
 int explosion(int j, Bille tabBille[], int nBilles) {
-  int compt1 = 0;
-  int compt2 = 0;
-  if (tabBille[j+1].color == tabBille[j].color){
-    while((tabBille[j+compt1].color == tabBille[j].color) && (j+compt1<nBilles)) {
-	++compt1;
-    }
+  int compt1 = j+1;
+  int compt2 = j-1;
+  int borne1 = j ;
+  int borne2 = j ;
+  while((compt1<nBilles) && (tabBille[compt1].color == tabBille[j].color)) {
+    borne1 = compt1;
+    ++compt1;
   }
-  if (tabBille[j-1].color == tabBille[j].color){
-    while((tabBille[j+compt2].color == tabBille[j].color) && (j+compt2>=0)) {
-	--compt2;
-    }
+  while((compt2>=0) && (tabBille[compt2].color == tabBille[j].color)) {
+    borne2 = compt2;
+    --compt2;
   }
-  if(compt1-compt2>1) {
-	disparaitre(j, compt1, compt2, nBilles, tabBille);
+  if(borne1-borne2>=2) {
+	disparaitre(j, borne1, borne2, nBilles, tabBille);
   }
-  return (nBilles-(compt1-compt2+1));
+  return (nBilles - (borne1-borne2+1));
 }
+
 
 
 int main() {
