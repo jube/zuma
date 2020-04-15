@@ -114,16 +114,24 @@ bool collision(Bille bille1, Bille bille2) {
 }
 
 void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
-  for(int j = nBilles-1 ; j>=i ; --j){
-    tabBille[j]=tabBille[j-1];
-  }
-  tabBille[i].color = billeLance.color;
+  if (i ==0){
+    for(int j = nBilles-1 ; j>i ; --j){
+      tabBille[j]=tabBille[j-1];
+    }
+    tabBille[0].color = billeLance.color;
+    tabBille[0].x +=tabBille[0].rayon*2;
+  }else{
+    for(int j = nBilles-1 ; j>=i ; --j){
+      tabBille[j]=tabBille[j-1];
+    }
+    tabBille[i].color = billeLance.color;
 
-  for (int k = i-1; k>0 ; --k){
-    tabBille[k].x = tabBille[k-1].x;
-    tabBille[k].y = tabBille[k-1].y;
-  }
-  tabBille[0].x +=tabBille[0].rayon*2;
+    for (int k = i-1; k>0 ; --k){
+      tabBille[k].x = tabBille[k-1].x;
+      tabBille[k].y = tabBille[k-1].y;
+    }
+    tabBille[0].x +=tabBille[0].rayon*2;
+    }
 }
 
 
