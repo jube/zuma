@@ -126,6 +126,19 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
   tabBille[0].x +=tabBille[0].rayon*2;
 }
 
+
+//Fonction qui permet de faire disparaître des billes
+void disparaitre(int j, int compt1, int compt2, int nBilles, Bille tabBille[]) {
+	int k = 0;
+	for(int i = j+compt1+1; i<nBilles; i++) {
+		tabBille[j+compt2+k].x = tabBille[i].x;
+		tabBille[j+compt2+k].y = tabBille[i].y;
+		tabBille[j+compt2+k].color = tabBille[i].color;
+		++k;
+	}
+}
+
+
 //Le Color::Black ne sert qu'à des tests
 int explosion(int j, Bille tabBille[], int nBilles) {
   int compt1 = 1;
@@ -137,14 +150,9 @@ int explosion(int j, Bille tabBille[], int nBilles) {
 	--compt2;
 	  }
   if(compt1-compt2>1) {
-	for(int i = j; i<=j+compt1; i++) {
-		tabBille[i].color = Color::Black;
-	}
-	for(int k = j; k>=j+compt2; k--) {
-		tabBille[k].color = Color::Black;
-	}
+	disparaitre(j, compt1, compt2, nBilles, tabBille);
   }
-  return (nBilles-(compt1+compt2+1));
+  return (nBilles-(compt1-compt2+1));
 }
 
 
