@@ -210,21 +210,21 @@ int main() {
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
   billeLance.rayon = 10;
-  billeLance.x = SCREENW / 2;
-  billeLance.y = SCREENH / 2;
+  billeLance.x = (SCREENW-40) / 2;
+  billeLance.y = (SCREENH-40) / 2;
   billeLance.color = getRandomCol(n, tabCol);
 
   Bille billeReserve;
   billeReserve.rayon = 10;
-  billeReserve.x = (SCREENW-40) / 2;
-  billeReserve.y = (SCREENH-40) / 2;
+  billeReserve.x = SCREENW / 2;
+  billeReserve.y = SCREENH / 2;
   billeReserve.color = getRandomCol(n, tabCol);
 
 
 
   bool deplacer = false;
-  double initx = SCREENW / 2;
-  double inity = SCREENH / 2;
+  double initx = (SCREENW-40) / 2;
+  double inity =(SCREENH-40) / 2;
   double sourisx = 0;
   double sourisy = 0;
 
@@ -253,19 +253,16 @@ int main() {
         deplacer=true;
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
-        Color echange = billeLance.color;
-	    billeLance.color= billeReserve.color;
-	    billeReserve.color=echange;
       }
 
-      //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
-      if (event.type == Event::KeyPressed) {
+     //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
+     if (event.type == Event::KeyPressed) {
 	 if (event.key.code == sf::Keyboard::Space){
            Color echange = billeLance.color;
 	       billeLance.color= billeReserve.color;
 	       billeReserve.color=echange;
-	 }
-      }
+	 	}
+     }
 
     }//fin de while window.pollEvent
 
@@ -286,20 +283,25 @@ int main() {
       	billeLance.y = inity;
      	deplacer = false;
      	billeLance.color = getRandomCol(n, tabCol);
+     	Color echange = billeLance.color;
+	    billeLance.color= billeReserve.color;
+	    billeReserve.color=echange;
       }
       
       for (int j = 0;j<nBilles; ++j){
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  explosion(j, tabBille, nBilles);
+	  	  explosion(j, tabBille, nBilles);
           billeLance.x = initx;
           billeLance.y = inity;
 	  	  billeLance.color = getRandomCol(n, tabCol);
 	 	  deplacer = false;
+	 	  Color echange = billeLance.color;
+	      billeLance.color= billeReserve.color;
+	      billeReserve.color=echange;
         }
        }
-
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
       billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
