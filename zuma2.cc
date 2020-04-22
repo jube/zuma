@@ -135,14 +135,15 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 }
 
 
-void disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
+int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
  for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
    tabBille[borne2+i]=tabBille[borne1+1+i];
  }
+ return ((nBilles-(borne1-borne2+1))*10);
 }
 
 
-int explosion(int j, Bille tabBille[], int nBilles) {
+int explosion(int j, Bille tabBille[], int nBilles, int score) {
   int borne1 = j ;
   int borne2 = j ;
   int newNBilles = nBilles;
@@ -153,7 +154,7 @@ int explosion(int j, Bille tabBille[], int nBilles) {
     --borne2 ;
   }
   if(borne1-borne2>=2) {
-	disparaitre(j, borne1, borne2, nBilles, tabBille);
+	score = disparaitre(j, borne1, borne2, nBilles, tabBille);
         newNBilles = nBilles - (borne1-borne2+1) ;
   }
   return newNBilles;
@@ -205,6 +206,10 @@ int main() {
   //longueur et hauteur du plateau
   const int LONGUEUR=500;
   const int HAUTEUR=500;
+
+  //Variable modélisant le score (initialisé à 0)
+  int score = 0;
+
 
   //caracters associes aux couleurs
   //faut utiliser une constante pr la taille
@@ -313,7 +318,7 @@ int main() {
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  	  nBilles=explosion(j, tabBille, nBilles);
+	  nBilles=explosion(j, tabBille, nBilles, score);
           billeLance.x = initx;
           billeLance.y = inity;
 	  	  billeLance.color = getRandomCol(n, tabCol);
