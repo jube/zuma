@@ -251,7 +251,7 @@ int main() {
 
   Clock clock;
 
-  while ((window.isOpen()) && (perdu==false)) {
+  while ((perdu==false) && (window.isOpen())) {
 
     Event event;
     while (window.pollEvent(event)) {
@@ -329,11 +329,14 @@ int main() {
     }
 
 //POur savoir si on a perdu
- for (int i = nBilles-1; i >= 0; --i) {
-   	if (tabBille[i].x>= SCREENW) {
+ int i = nBilles-1;
+ do {
+   float dist = tabBille[i].x + (9*tabBille[i].rayon);
+   if (dist >= SCREENW) {
 	   perdu = true;
-        }
- }
+   }
+   --i;
+ } while ((!perdu) && (i >=0));
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
