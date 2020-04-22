@@ -256,7 +256,7 @@ int main() {
 
   Clock clock;
 
-  while ((perdu==false) && (gagne == false) && (window.isOpen())) {
+  while (!perdu && !gagne && window.isOpen()) {
 
     Event event;
     while (window.pollEvent(event)) {
@@ -266,7 +266,7 @@ int main() {
         window.close();
       }
 
-      if ((event.type == sf::Event::MouseButtonPressed)&&(deplacer==false)){
+      if ((event.type == sf::Event::MouseButtonPressed)&&(!deplacer)){
         deplacer=true;
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
@@ -298,7 +298,7 @@ int main() {
     for (int i = nBilles-1; i >=0; --i) {
     	if (i==nBilles-1){
      	  tabBille[i].x += distance ;
-     	 } else if (collision(tabBille[i+1],tabBille[i])==true){
+     	 } else if (collision(tabBille[i+1],tabBille[i])){
      	 	tabBille[i].x += distance;
      	 }
     }
