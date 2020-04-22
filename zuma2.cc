@@ -142,26 +142,21 @@ void disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 }
 
 
-//Le Color::Black ne sert qu'à des tests
 int explosion(int j, Bille tabBille[], int nBilles) {
-  int compt1 = j+1;
-  int compt2 = j-1;
   int borne1 = j ;
   int borne2 = j ;
-  int newNbille=nBilles;
-  while((compt1<nBilles) && (tabBille[compt1].color == tabBille[j].color)) {
-    borne1 = compt1;
-    ++compt1;
+  int newNBilles = nBilles;
+  while((borne1+1<nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
+   ++ borne1;
   }
-  while((compt2>=0) && (tabBille[compt2].color == tabBille[j].color)) {
-    borne2 = compt2;
-    --compt2;
+  while((borne2-1>=0) && (tabBille[borne2-1].color == tabBille[j].color)) {
+    --borne2 ;
   }
   if(borne1-borne2>=2) {
 	disparaitre(j, borne1, borne2, nBilles, tabBille);
-	newNbille=(nBilles - (borne1-borne2+1));
+        newNBilles = nBilles - (borne1-borne2+1) ;
   }
-  return (newNbille);
+  return newNBilles;
 }
 
 
