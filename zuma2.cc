@@ -192,7 +192,7 @@ int main() {
 
   //vrai quand uti a gagné  qd y'a plus de bille sur circuit 
   //si vrai jeu s'arrete
-  bool gagne;
+  bool gagne = false;
 
   //Constante modélisant la vitesse des billes sur le circuit
   const int SPEED=10;
@@ -256,7 +256,7 @@ int main() {
 
   Clock clock;
 
-  while ((perdu==false) && (window.isOpen())) {
+  while ((perdu==false) && (gagne == false) && (window.isOpen())) {
 
     Event event;
     while (window.pollEvent(event)) {
@@ -319,13 +319,16 @@ int main() {
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
 	  nBilles=explosion(j, tabBille, nBilles, score);
+	  if (nBilles == 0) {
+	     gagne = true;
+          }
           billeLance.x = initx;
           billeLance.y = inity;
-	  	  billeLance.color = getRandomCol(n, tabCol);
-	 	  deplacer = false;
-	 	  Color echange = billeLance.color;
-	      billeLance.color= billeReserve.color;
-	      billeReserve.color=echange;
+	  billeLance.color = getRandomCol(n, tabCol);
+	  deplacer = false;
+	  Color echange = billeLance.color;
+	  billeLance.color= billeReserve.color;
+	  billeReserve.color=echange;
         }
        }
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
@@ -371,6 +374,7 @@ int main() {
     reserve.setPosition(billeReserve.x-billeReserve.rayon, billeReserve.y-billeReserve.rayon);
     reserve.setFillColor(billeReserve.color);
     window.draw(reserve);
+    
 
     window.display();
   }//fin de la while de window.isOpen
