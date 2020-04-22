@@ -162,7 +162,8 @@ int explosion(int j, Bille tabBille[], int nBilles) {
 
 
 int main() {
-  
+ 
+
   // A modif avec taille et titre qu'on veut pr la fenetre de jeu
   const int SCREENW=800;
   const int SCREENH=600;
@@ -186,7 +187,7 @@ int main() {
 
   //vrai quand l'utilisateur a perdu:une bille atteint fin circuit 
   //si vrai jeu s'arrete
-  bool perdu;
+  bool perdu = false;
 
   //vrai quand uti a gagné  qd y'a plus de bille sur circuit 
   //si vrai jeu s'arrete
@@ -248,17 +249,15 @@ int main() {
       tabBille[i].color = getRandomCol(n, tabCol);
   }
 
-
-
   Clock clock;
 
-  while (window.isOpen()) {
+  while ((window.isOpen()) && (perdu==false)) {
 
     Event event;
     while (window.pollEvent(event)) {
 
       //pour fermer la fenetre quand on clique sur la croix
-      if (event.type == Event::Closed) {
+      if ((event.type == Event::Closed) || (perdu == true)) {
         window.close();
       }
 
@@ -284,6 +283,11 @@ int main() {
     double distance = SPEED*dt;
     double distanceLance = SPEEDLANCE *dt;
     double hyp ;
+
+//Pour savoir si on a atteint le bout de l'écran 
+  if(tabBille[nBilles-1].x >= SCREENW) {
+	perdu = false;
+  }
 
 	//pour que les billes attendent
     for (int i = nBilles-1; i >=0; --i) {
@@ -323,9 +327,13 @@ int main() {
       billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
-    
-    
 
+//POur savoir si on a perdu
+ for (int i = nBilles-1; i >= 0; --i) {
+   	if (tabBille[i].x>= SCREENW) {
+	   perdu = true;
+        }
+ }
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
@@ -335,14 +343,16 @@ int main() {
     shape.setFillColor(grenouille.color);
     window.draw(shape);
     
-
+    
 	//Affichage billes:
     for (int i = 0; i < nBilles; ++i) {
-   		CircleShape shape(tabBille[i].rayon);
+   	CircleShape shape(tabBille[i].rayon);
     	shape.setPosition(tabBille[i].x, tabBille[i].y);
     	shape.setFillColor(tabBille[i].color);
     	window.draw(shape);
-    }
+   }
+    
+ 
       
     CircleShape lancer(billeLance.rayon);
     lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
