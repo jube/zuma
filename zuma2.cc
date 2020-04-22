@@ -148,6 +148,7 @@ int explosion(int j, Bille tabBille[], int nBilles) {
   int compt2 = j-1;
   int borne1 = j ;
   int borne2 = j ;
+  int newNbille=nBilles;
   while((compt1<nBilles) && (tabBille[compt1].color == tabBille[j].color)) {
     borne1 = compt1;
     ++compt1;
@@ -158,8 +159,9 @@ int explosion(int j, Bille tabBille[], int nBilles) {
   }
   if(borne1-borne2>=2) {
 	disparaitre(j, borne1, borne2, nBilles, tabBille);
+	newNbille=(nBilles - (borne1-borne2+1));
   }
-  return (nBilles - (borne1-borne2+1));
+  return (newNbille);
 }
 
 
@@ -288,11 +290,15 @@ int main() {
     double distanceLance = SPEEDLANCE *dt;
     double hyp ;
 
-    for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].x += distance ;
-     // tabBille[i].posBille.y += distance;
+	//pour que les billes attendent
+    for (int i = nBilles-1; i >=0; --i) {
+    	if (i==nBilles-1){
+     	  tabBille[i].x += distance ;
+     	 } else if (collision(tabBille[i+1],tabBille[i])==true){
+     	 	tabBille[i].x += distance;
+     	 }
     }
-    
+
     if (deplacer){
       if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
       	billeLance.x = initx;
@@ -308,7 +314,7 @@ int main() {
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  	  explosion(j, tabBille, nBilles);
+	  	  nBilles=explosion(j, tabBille, nBilles);
           billeLance.x = initx;
           billeLance.y = inity;
 	  	  billeLance.color = getRandomCol(n, tabCol);
@@ -322,6 +328,8 @@ int main() {
       billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
+    
+    
 
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
