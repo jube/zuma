@@ -334,7 +334,7 @@ int main() {
     }
 
 //POur savoir si on a perdu
- float dist = tabBille[0].x + 9*tabBille[0].rayon;
+ float dist = tabBille[0].x +tabBille[0].rayon;
  if (dist >= SCREENW) {
 	perdu = true;
  }
@@ -352,7 +352,7 @@ int main() {
 	//Affichage billes:
     for (int i = 0; i < nBilles; ++i) {
    	CircleShape shape(tabBille[i].rayon);
-    	shape.setPosition(tabBille[i].x, tabBille[i].y);
+    	shape.setPosition(tabBille[i].x-billeLance.rayon, tabBille[i].y-billeLance.rayon);
     	shape.setFillColor(tabBille[i].color);
     	window.draw(shape);
    }
