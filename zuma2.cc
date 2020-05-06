@@ -168,7 +168,7 @@ int main() {
   // A modif avec taille et titre qu'on veut pr la fenetre de jeu
   const int SCREENW=800;
   const int SCREENH=600;
-  RenderWindow window(VideoMode(SCREENW, SCREENH), "Titre");
+  RenderWindow window(VideoMode(SCREENW, SCREENH), "ZUMA");
 
   //Initialisation de la grenouille ainsi que de sa position au centre du plateau
   Grenouille grenouille;
@@ -201,7 +201,7 @@ int main() {
   const int SPEEDLANCE=300;
 
   //Diamètre de la bille
-  const int DIAMBILLE=20;
+  const int RAYONBILLE=10;
 
   //longueur et hauteur du plateau
   const int LONGUEUR=500;
@@ -225,6 +225,9 @@ int main() {
 
   //Tableau répertoriant toutes les billes présentes sur le circuit
   Bille tabBille[NBILLESINIT];
+
+  //On s'en sert pour avoir la direction de la bille à lancer 
+  double hyp;
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
@@ -250,7 +253,7 @@ int main() {
   for (int i = 0; i < nBilles; ++i) {
       tabBille[i].x = 100-(20*i);
       tabBille[i].y = 10;
-      tabBille[i].rayon = DIAMBILLE/2;
+      tabBille[i].rayon = RAYONBILLE;
       tabBille[i].color = getRandomCol(n, tabCol);
   }
 
@@ -287,12 +290,6 @@ int main() {
     float dt = clock.restart().asSeconds();
     double distance = SPEED*dt;
     double distanceLance = SPEEDLANCE *dt;
-    double hyp ;
-
-//Pour savoir si on a atteint le bout de l'écran 
-  if(tabBille[nBilles-1].x >= SCREENW) {
-	perdu = false;
-  }
 
 	//pour que les billes attendent
     for (int i = nBilles-1; i >=0; --i) {
@@ -337,14 +334,11 @@ int main() {
     }
 
 //POur savoir si on a perdu
- int i = nBilles-1;
- do {
-   float dist = tabBille[i].x + (9*tabBille[i].rayon);
-   if (dist >= SCREENW) {
-	   perdu = true;
-   }
-   --i;
- } while ((!perdu) && (i >=0));
+ float dist = tabBille[0].x + 9*tabBille[0].rayon;
+ if (dist >= SCREENW) {
+	perdu = true;
+ }
+
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
