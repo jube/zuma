@@ -108,10 +108,27 @@ Color getRandomCol(int n, char tabCol[]) {
   return (assignementCol(color));
 }
 
+/**
+*Fonction permettant de savoir si une bille est entrée en collision avec une autre bille
+*
+*@param bille1
+*@param bille2
+*
+*@return un booléen, true si les billes sont entrées en collision, false sinon
+*/
 
 bool collision(Bille bille1, Bille bille2) {
   return !( (bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon) <= (bille1.x - bille2.x)*(bille1.x - bille2.x) + (bille1.y - bille2.y)*(bille1.y - bille2.y) );
 }
+
+/**
+*Fonction permettant d'incruster une bille dans le circuit
+*
+*@param billeLance La bille lancée qui va être incrustée dans le circuit
+*@param tabBille[] Le tableau répertoriant toutes les billes du circuit
+*@param i rang auquel la bille va être incrustée
+*@param nBilles le nombre de billes présentes sur le circuit
+*/
 
 void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
   if (i ==0){
@@ -134,6 +151,17 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
     }
 }
 
+/**
+*Fonction permettant de faire disparaître des billes du circuit
+*
+*@param j Le rang de la bille qui a été lancée et qui provoque une potentielle explosion
+*@param borne1 Le nombre de billes de la même couleur que la bille lancée se plaçant avant dans le tableau
+*@param borne2 Le nombre de billes de la même couleur que la bille lancée se plaçant après dans le tableau
+*@param nBilles Le nombre de billes présentes sur le circuit
+*@param tabBille[] Le tableau répertoriant toutes les billes du circuit 
+*
+*@return Le nombre de billes retirées du circuit multiplié par 10 afin de calculer le score associé à la disparition
+*/
 
 int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
  for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
@@ -142,6 +170,16 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
  return ((nBilles-(borne1-borne2+1))*10);
 }
 
+/**
+*Fonction permettant de provoquer une explosion dans le circuit
+*
+*@param j Le rang de la bille qui a été lancée et qui provoque une potentielle explosion
+*@param score Le score du joueur durant la partie, mis à jour si une explosion a eu lieu
+*@param nBilles le nombre de billes présentes sur le circuit
+*@param tabBille[] le tableau répertoriant toutes les billes du circuit
+*
+*@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui diminue, sinon il reste inchangé)
+*/
 
 int explosion(int j, Bille tabBille[], int nBilles, int score) {
   int borne1 = j ;
@@ -165,7 +203,7 @@ int explosion(int j, Bille tabBille[], int nBilles, int score) {
 int main() {
  
 
-  // A modif avec taille et titre qu'on veut pr la fenetre de jeu
+  // A modif avec taille 
   const int SCREENW=800;
   const int SCREENH=600;
   RenderWindow window(VideoMode(SCREENW, SCREENH), "ZUMA");
@@ -178,20 +216,20 @@ int main() {
   grenouille.color = Color::Black;
 
   ////VARIABLES////
-  //Les constantes sont initiées au hasard pr que ça compile c'est a changer
-  //constante nb de bille crées en début de partie
+  //Les constantes sont initialisées au hasard (à changer)
+  //constante nombre de billes créées en début de partie
   const int NBILLESINIT=100;
 
-  //nb de billes restantes sur le circuit 
-  //ititialisé grace a la constante 
+  //nombre de billes restantes sur le circuit 
+  //initialisé grâce à la constante NBILLESINIT
   int nBilles=10;
 
-  //vrai quand l'utilisateur a perdu:une bille atteint fin circuit 
-  //si vrai jeu s'arrete
+  //vrai quand l'utilisateur a perdu (une bille atteint la fin du circuit) 
+  //si vrai, le jeu s'arrête
   bool perdu = false;
 
-  //vrai quand uti a gagné  qd y'a plus de bille sur circuit 
-  //si vrai jeu s'arrete
+  //vrai quand l'utilisateur a gagné (quand il a éliminé toutes les billes du circuit) 
+  //si vrai, le jeu s'arrête
   bool gagne = false;
 
   //Constante modélisant la vitesse des billes sur le circuit
@@ -200,7 +238,7 @@ int main() {
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=300;
 
-  //Diamètre de la bille
+  //Rayon de la bille
   const int RAYONBILLE=10;
 
   //longueur et hauteur du plateau
@@ -211,9 +249,9 @@ int main() {
   int score = 0;
 
 
-  //caracters associes aux couleurs
-  //faut utiliser une constante pr la taille
+  //caractères associés aux couleurs
   char tabCol[4];
+
   //Initialisation des couleurs dans chaque case du tableau
   tabCol[0] = 'r';
   tabCol[1] = 'j';
@@ -226,7 +264,7 @@ int main() {
   //Tableau répertoriant toutes les billes présentes sur le circuit
   Bille tabBille[NBILLESINIT];
 
-  //On s'en sert pour avoir la direction de la bille à lancer 
+  //Variable dont on se sert afin de récupérer la direction de la bille à lancer 
   double hyp;
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
@@ -236,6 +274,7 @@ int main() {
   billeLance.y = (SCREENH-40) / 2;
   billeLance.color = getRandomCol(n, tabCol);
 
+  //bille permettant de modéliser la bille en réserve (qui peut être échangée avec la bille lance en cas d'appui sur la barre espace, et qui est la prochaine bille proposée pour être lancée)
   Bille billeReserve;
   billeReserve.rayon = 10;
   billeReserve.x = SCREENW / 2;
@@ -249,7 +288,8 @@ int main() {
   double inity =(SCREENH-40) / 2;
   double sourisx = 0;
   double sourisy = 0;
-
+  
+  //Initialisation de toutes les billes du tableau en début de partie 
   for (int i = 0; i < nBilles; ++i) {
       tabBille[i].x = 100-(20*i);
       tabBille[i].y = 10;
@@ -275,7 +315,7 @@ int main() {
         sourisy = event.mouseButton.y;
       }
 
-     //si l'on appuie sur la barre espace la couleur des billes de reverve et prete a etre lancée sont echangées
+     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
      if (event.type == Event::KeyPressed) {
 	 if (event.key.code == sf::Keyboard::Space){
            Color echange = billeLance.color;
@@ -291,7 +331,7 @@ int main() {
     double distance = SPEED*dt;
     double distanceLance = SPEEDLANCE *dt;
 
-	//pour que les billes attendent
+	//pour que les billes attendent lorsqu'une explosion se produit
     for (int i = nBilles-1; i >=0; --i) {
     	if (i==nBilles-1){
      	  tabBille[i].x += distance ;
@@ -333,7 +373,7 @@ int main() {
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
 
-//POur savoir si on a perdu
+  //Pour savoir si on a perdu
  float dist = tabBille[0].x +tabBille[0].rayon;
  if (dist >= SCREENW) {
 	perdu = true;
