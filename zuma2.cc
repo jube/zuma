@@ -178,10 +178,10 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 *@param nBilles le nombre de billes présentes sur le circuit
 *@param tabBille[] le tableau répertoriant toutes les billes du circuit
 *
-*@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui diminue, sinon il reste inchangé)
+*@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
 */
 
-int explosion(int j, Bille tabBille[], int nBilles, int score) {
+int explosion(int j, Bille tabBille[], int nBilles, int score, bool explode) {
   int borne1 = j ;
   int borne2 = j ;
   int newNBilles = nBilles;
@@ -194,6 +194,7 @@ int explosion(int j, Bille tabBille[], int nBilles, int score) {
   if(borne1-borne2>=2) {
 	score = disparaitre(j, borne1, borne2, nBilles, tabBille);
         newNBilles = nBilles - (borne1-borne2+1) ;
+	explode = true;
   }
   return newNBilles;
 }
@@ -281,6 +282,8 @@ int main() {
   billeReserve.y = SCREENH / 2;
   billeReserve.color = getRandomCol(n, tabCol);
 
+  //variable pour faire exploser les billes seulement après que la partie ait commencé
+  bool explode = false;
 
 
   bool deplacer = false;
@@ -336,6 +339,7 @@ int main() {
     	if (i==nBilles-1){
      	  tabBille[i].x += distance ;
      	 } else if (collision(tabBille[i+1],tabBille[i])){
+		nBilles = explosion(i, tabBille, nBilles, score, explode);
      	 	tabBille[i].x += distance;
      	 }
     }
@@ -355,7 +359,7 @@ int main() {
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  nBilles=explosion(j, tabBille, nBilles, score);
+	  nBilles=explosion(j, tabBille, nBilles, score, explode);
 	  if (nBilles == 0) {
 	     gagne = true;
           }
