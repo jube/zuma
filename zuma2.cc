@@ -109,6 +109,88 @@ Color getRandomCol(int n, char tabCol[]) {
 }
 
 /**
+*Fonction permettant de savoir si une couleur de bille est présente sur le circuit ou non
+*
+*@param nBilles le nombre de billes présentes sur le circuit
+*@param tabBille[] Le tableau répertoriant toutes les billes du circuit
+*@param couleur La couleur que l'on cherche
+*
+*@return un booléen, true si la couleur est présente sur le circuit, false sinon
+*/
+bool colorExist(int nBilles, Bille tabBille[], Color couleur){
+	bool exist=false;
+	for(int i = 0 ; i < nBilles; ++i){
+      if(tabBille[i].color== couleur){
+      	exist=true;
+      }
+    }
+    return exist;
+}
+
+/**
+*Fonction permettant de connaitre l'indice auquel se trouve une couleur dans le tableau
+*
+*@param tabCol un tableau de caractères représentants les couleurs existantes 
+*@param couleur un caractère représentant la couleur recherchée
+*
+*@return un entier,l'indice auquel se trouve le caractère dans le tableau
+*/
+int indiceCouleur(char tabCol[], char couleur){
+	int indice=-1;
+	for (int n=0;n<4;n++){
+		if(tabCol[n] == couleur){
+			indice=n;
+		}
+	}
+	return indice;
+}
+	
+/**
+*Fonction permettant de déplacer un caractère vers la gauche du tableau représentant les couleurs
+*
+*@param indice l'indice du caractère a déplacer
+*@param tabCol un tableau de caractères représentants les couleurs existantes 
+*/
+void decaler(int indice, char tabCol[]){
+	char tempo=tabCol[indice];
+	for (int w=indice;w>0;w--){
+		tabCol[w]=tabCol[w-1];
+	}
+	tabCol[0]=tempo;
+}
+
+/**
+*Fonction permettant ranger le tableau représentant les couleurs selon celles qui sont encore sur le circuit et de savoir combien il y reste de couleurs
+*
+*@param nBilles le nombre de billes présentes sur le circuit
+*@param tabBille[] Le tableau répertoriant toutes les billes du circuit
+*@param tabCol un tableau de caractères représentants les couleurs existantes 
+*
+*@return un entier, le nombre de couleurs restantes sur le circuit 
+*/
+int rangerTabCol(int nBilles, Bille tabBille[],char tabCol[]){
+	int comp=0;
+	if(colorExist(nBilles,tabBille,Color::Red)){
+		decaler(indiceCouleur(tabCol,'r'),tabCol);
+		comp+=1;
+	}
+	if(colorExist(nBilles,tabBille,Color::Blue)){
+		decaler(indiceCouleur(tabCol,'b'),tabCol);
+		comp+=1;
+	}
+	if(colorExist(nBilles,tabBille,Color::Yellow)){
+		decaler(indiceCouleur(tabCol,'j'),tabCol);
+		comp+=1;
+	}
+	if(colorExist(nBilles,tabBille,Color::Green)){
+		decaler(indiceCouleur(tabCol,'v'),tabCol);
+		comp+=1;
+	}
+	return comp;
+}
+
+
+/**
 *Fonction permettant de savoir si une bille est entrée en collision avec une autre bille
 *
 *@param bille1
@@ -333,6 +415,11 @@ int main() {
     float dt = clock.restart().asSeconds();
     double distance = SPEED*dt;
     double distanceLance = SPEEDLANCE *dt;
+    
+    
+    //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
+    n=rangerTabCol(nBilles,tabBille,tabCol);
+
 
 	//pour que les billes attendent lorsqu'une explosion se produit
     for (int i = nBilles-1; i >=0; --i) {
@@ -401,8 +488,6 @@ int main() {
     	window.draw(shape);
    }
     
- 
-      
     CircleShape lancer(billeLance.rayon);
     lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
     lancer.setFillColor(billeLance.color);
