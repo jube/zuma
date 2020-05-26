@@ -451,7 +451,6 @@ int main() {
     	if (i==nBilles-1){
      	  tabBille[i].x += distance ;
      	 } else if (collision(tabBille[i+1],tabBille[i])){
-		nBilles = explosion(i, tabBille, nBilles, score, explode);
      	 	tabBille[i].x += distance;
      	 }
     }
