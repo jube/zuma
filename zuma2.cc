@@ -235,25 +235,32 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
     }
   }else{
   //incrustation à gauche de la bille
-    if (sqrt((tabBille[i].x-tabBille[i+1].x)*(tabBille[i].x-tabBille[i+1].x)+(tabBille[i].y-tabBille[i+1].y)*(tabBille[i].y-tabBille[i+1].y))<4*tabBille[0].rayon){
-      //cas où il y a collision
-      for(int j = nBilles-1 ; j>i+1 ; --j){
-      tabBille[j]=tabBille[j-1];
-      }
-      tabBille[i+1].color = billeLance.color;
-
-      for (int k = i+1; k>0 ; --k){
-        tabBille[k].x = tabBille[k-1].x;
-        tabBille[k].y = tabBille[k-1].y;
-      }
-      tabBille[0].x +=tabBille[0].rayon*2;
-    //cas sans collision
-    }else{
-      for(int j = nBilles-1 ; j>i+1 ; --j){
-        tabBille[j]=tabBille[j-1];
-      }
+    if (i+1==nBilles-1){
       tabBille[i+1].color = billeLance.color;
       tabBille[i+1].x= tabBille[i].x-tabBille[0].rayon*2;
+      tabBille[i+1].y= tabBille[i].y;
+      tabBille[i+1].rayon= tabBille[i].rayon;
+    }else{
+      if (sqrt((tabBille[i].x-tabBille[i+1].x)*(tabBille[i].x-tabBille[i+1].x)+(tabBille[i].y-tabBille[i+1].y)*(tabBille[i].y-tabBille[i+1].y))<4*tabBille[0].rayon){
+        //cas où il y a collision
+        for(int j = nBilles-1 ; j>i+1 ; --j){
+        tabBille[j]=tabBille[j-1];
+        }
+        tabBille[i+1].color = billeLance.color;
+
+        for (int k = i+1; k>0 ; --k){
+          tabBille[k].x = tabBille[k-1].x;
+          tabBille[k].y = tabBille[k-1].y;
+        }
+        tabBille[0].x +=tabBille[0].rayon*2;
+      //cas sans collision
+      }else{
+        for(int j = nBilles-1 ; j>i+1 ; --j){
+          tabBille[j]=tabBille[j-1];
+        }
+        tabBille[i+1].color = billeLance.color;
+        tabBille[i+1].x= tabBille[i].x-tabBille[0].rayon*2;
+      }
     }
   }
 }
