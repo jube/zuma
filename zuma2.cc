@@ -479,8 +479,7 @@ int main() {
    		  n=rangerTabCol(nBilles,tabBille,tabCol);
    		   //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
    		  if(nAvant!=n){
-   		 	billeLance.color = getRandomCol(n, tabCol);
-	 	 //   billeReserve.color=getRandomCol(n, tabCol);
+	 	    billeReserve.color=getRandomCol(n, tabCol);
    		  }
 	  
 	  if (nBilles == 0) {
