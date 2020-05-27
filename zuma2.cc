@@ -374,6 +374,16 @@ int main() {
 
   //Variable dont on se sert afin de récupérer la direction de la bille à lancer 
   double hyp;
+  
+   //Initialisation de toutes les billes du tableau en début de partie 
+  for (int i = 0; i < nBilles; ++i) {
+      tabBille[i].x = 100-(20*i);
+      tabBille[i].y = 10;
+      tabBille[i].rayon = RAYONBILLE;
+      tabBille[i].color = getRandomCol(n, tabCol);
+  }
+  //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
+  n=rangerTabCol(nBilles,tabBille,tabCol);
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
@@ -399,13 +409,7 @@ int main() {
   double sourisx = 0;
   double sourisy = 0;
   
-  //Initialisation de toutes les billes du tableau en début de partie 
-  for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].x = 100-(20*i);
-      tabBille[i].y = 10;
-      tabBille[i].rayon = RAYONBILLE;
-      tabBille[i].color = getRandomCol(n, tabCol);
-  }
+  
 
   Clock clock;
 
