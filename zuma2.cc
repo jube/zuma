@@ -474,7 +474,15 @@ int main() {
         if(collision(billeLance, tabBille[j])){
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
-	  nBilles=explosion(j, tabBille, nBilles, score, explode);
+          int nAvant=n;
+		  nBilles=explosion(j, tabBille, nBilles, score, explode);
+   		  n=rangerTabCol(nBilles,tabBille,tabCol);
+   		   //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
+   		  if(nAvant!=n){
+   		 	billeLance.color = getRandomCol(n, tabCol);
+	 	 //   billeReserve.color=getRandomCol(n, tabCol);
+   		  }
+	  
 	  if (nBilles == 0) {
 	     gagne = true;
           }
