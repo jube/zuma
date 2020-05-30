@@ -295,20 +295,20 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 *@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
 */
 
-int explosion(int j, Bille tabBille[], int nBilles, int score, bool explode) {
+int explosion(int j, Bille tabBille[], int nBilles, int score) {
   int borne1 = j ;
   int borne2 = j ;
   int newNBilles = nBilles;
+
   while((borne1+1<nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
-   ++ borne1;
+		++ borne1;
   }
   while((borne2-1>=0) && (tabBille[borne2-1].color == tabBille[j].color)) {
-    --borne2 ;
+		--borne2 ;
   }
   if(borne1-borne2>=2) {
 	score = disparaitre(j, borne1, borne2, nBilles, tabBille);
-        newNBilles = nBilles - (borne1-borne2+1) ;
-	explode = true;
+	newNBilles = nBilles - (borne1-borne2+1);
   }
   return newNBilles;
 }
@@ -363,7 +363,7 @@ int main() {
   //Variable modélisant le score (initialisé à 0)
   int score = 0;
 
-
+ 
   //caractères associés aux couleurs
   char tabCol[4];
 
@@ -381,6 +381,12 @@ int main() {
 
   //Variable dont on se sert afin de récupérer la direction de la bille à lancer 
   double hyp;
+  
+  //Les textures
+  Texture grenouilleTexture;
+  
+  //Les sprite
+  Sprite grenouilleSprite;
   
    //Initialisation de toutes les billes du tableau en début de partie 
   for (int i = 0; i < nBilles; ++i) {
@@ -402,14 +408,11 @@ int main() {
   //bille permettant de modéliser la bille en réserve (qui peut être échangée avec la bille lance en cas d'appui sur la barre espace, et qui est la prochaine bille proposée pour être lancée)
   Bille billeReserve;
   billeReserve.rayon = 10;
-  billeReserve.x = SCREENW / 2;
-  billeReserve.y = SCREENH / 2;
+  billeReserve.x = (SCREENW+420)/2;
+  billeReserve.y = (SCREENH+290)/2;
   billeReserve.color = getRandomCol(n, tabCol);
 
-  //variable pour faire exploser les billes seulement après que la partie ait commencé
-  bool explode = false;
-
-
+ 
   bool deplacer = false;
   double initx = (SCREENW-40) / 2;
   double inity =(SCREENH-40) / 2;
@@ -456,13 +459,12 @@ int main() {
     //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
     n=rangerTabCol(nBilles,tabBille,tabCol);
 
-
+   
 	//pour que les billes attendent lorsqu'une explosion se produit
     for (int i = nBilles-1; i >=0; --i) {
     	if (i==nBilles-1){
      	  tabBille[i].x += distance ;
      	 } else if (collision(tabBille[i+1],tabBille[i])){
-     	 	nBilles = explosion(i, tabBille, nBilles,score, explode);
      	 	tabBille[i].x += distance;
      	 }
     }
@@ -483,7 +485,7 @@ int main() {
           ++nBilles;
           incruster(billeLance, tabBille, j, nBilles);
           int nAvant=n;
-		  nBilles=explosion(j, tabBille, nBilles, score, explode);
+		  nBilles=explosion(j, tabBille, nBilles, score);
    		  n=rangerTabCol(nBilles,tabBille,tabCol);
    		   //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
    		  if(nAvant!=n){
@@ -516,11 +518,14 @@ int main() {
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
       
-    //Affichage grenouille:
-    CircleShape shape(grenouille.rayon);
-    shape.setPosition(grenouille.x -grenouille.rayon, grenouille.y-grenouille.rayon);
-    shape.setFillColor(grenouille.color);
-    window.draw(shape);
+     if(!grenouilleTexture.loadFromFile("grenouille.png")) {
+    	window.close();
+    	cout <<"ERROR : texture failed to load.";
+    }
+    grenouilleSprite.setTexture(grenouilleTexture);
+    grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
+    
+    window.draw(grenouilleSprite);
     
     
 	//Affichage billes:
@@ -541,7 +546,8 @@ int main() {
     reserve.setFillColor(billeReserve.color);
     window.draw(reserve);
     
-
+  
+    
     window.display();
   }//fin de la while de window.isOpen
   return 0;
