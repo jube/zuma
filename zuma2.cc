@@ -401,20 +401,20 @@ int main() {
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
   billeLance.rayon = 10;
-  billeLance.x = (SCREENW+270) / 2;
+  billeLance.x = (SCREENW+260) / 2;
   billeLance.y = (SCREENH+120) / 2;
   billeLance.color = getRandomCol(n, tabCol);
 
   //bille permettant de modéliser la bille en réserve (qui peut être échangée avec la bille lance en cas d'appui sur la barre espace, et qui est la prochaine bille proposée pour être lancée)
   Bille billeReserve;
   billeReserve.rayon = 10;
-  billeReserve.x = (SCREENW+400)/2;
-  billeReserve.y = (SCREENH+290)/2;
+  billeReserve.x = (SCREENW+430)/2;
+  billeReserve.y = (SCREENH+300)/2;
   billeReserve.color = getRandomCol(n, tabCol);
 
  
   bool deplacer = false;
-  double initx = (SCREENW+280) / 2;
+  double initx = (SCREENW+270) / 2;
   double inity =(SCREENH+130) / 2;
   double sourisx = 0;
   double sourisy = 0;
