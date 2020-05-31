@@ -481,14 +481,8 @@ int main() {
       }
       
       //pour rejouer lorsque l'on appuie qqp sur l'écran
-      if (((event.type == sf::Event::MouseButtonPressed)&&(perdu)) || ((event.type == sf::Event::MouseButtonPressed)&&(gagne))) {
-      	perdu = false;
-      	gagne = false;
-      	ecranA = true;
-      } else if((event.type == sf::Event::MouseButtonPressed)&&(ecranA)) {
+      if((event.type == sf::Event::MouseButtonPressed)&&(ecranA)) {
         ecranA = false;
-        perdu = false;
-        gagne = false;
       }
       
 
@@ -503,10 +497,7 @@ int main() {
 
     }//fin de while window.pollEvent
 
-    if(ecranA) {
-    	window.draw(ecranASprite);
-    	window.display();
-    } else {
+    
 	    float dt = clock.restart().asSeconds();
 	    double distance = SPEED*dt;
 	    double distanceLance = SPEEDLANCE *dt;
@@ -600,8 +591,8 @@ int main() {
 	    	window.draw(perduSprite);
 	    } else if(gagne) {
 	    	window.draw(victoireSprite);
-	    }
-	}
+	    } 
+	
 	    
   window.display();
   }//fin de la while de window.isOpen
