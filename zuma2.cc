@@ -411,6 +411,7 @@ int main() {
   billeReserve.x = (SCREENW+430)/2;
   billeReserve.y = (SCREENH+300)/2;
   billeReserve.color = getRandomCol(n, tabCol);
+  //
 
  
   bool deplacer = false;
