@@ -278,10 +278,10 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 */
 
 int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
- for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
-   tabBille[borne2+i]=tabBille[borne1+1+i];
- }
- return ((nBilles-(borne1-borne2+1))*10);
+	 for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
+	   tabBille[borne2+i]=tabBille[borne1+1+i];
+	 }
+	 return ((nBilles-(borne1-borne2+1))*10);
 }
 
 /**
@@ -296,20 +296,25 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 */
 
 int explosion(int j, Bille tabBille[], int nBilles, int score) {
-  int borne1 = j ;
-  int borne2 = j ;
+  int borne1 = j;
+  int borne2 = j;
   int newNBilles = nBilles;
-
-  while((borne1+1<nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
-		++ borne1;
-  }
-  while((borne2-1>=0) && (tabBille[borne2-1].color == tabBille[j].color)) {
-		--borne2 ;
-  }
-  if(borne1-borne2>=2) {
-	score = disparaitre(j, borne1, borne2, nBilles, tabBille);
-	newNBilles = nBilles - (borne1-borne2+1);
-  }
+  do {
+  	  borne1 = j ;
+  	  borne2 = j ;
+	  while((borne1+1<nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
+			++borne1;
+	  }
+	  while((borne2-1>=0) && (tabBille[borne2-1].color == tabBille[j].color)) {
+			--borne2;
+	  }
+	  if(borne1-borne2>=2) {
+	  	newNBilles = nBilles - (borne1-borne2+1);
+	  	score = disparaitre(j, borne1, borne2, nBilles, tabBille);
+	  	nBilles = newNBilles;
+		j = borne2-1;	  
+	  }
+  } while(borne1-borne2>=2 && newNBilles >0);
   return newNBilles;
 }
 
@@ -382,12 +387,6 @@ int main() {
   //Variable dont on se sert afin de récupérer la direction de la bille à lancer 
   double hyp;
   
-  //Les textures
-  Texture grenouilleTexture;
-  
-  //Les sprite
-  Sprite grenouilleSprite;
-  
    //Initialisation de toutes les billes du tableau en début de partie 
   for (int i = 0; i < nBilles; ++i) {
       tabBille[i].x = 100-(20*i);
@@ -420,13 +419,17 @@ int main() {
   double sourisx = 0;
   double sourisy = 0;
   
-    
-    if(!grenouilleTexture.loadFromFile("grenouille.png")) {
-    	window.close();
+  //Les textures
+  Texture grenouilleTexture;
+  
+  //Les sprite
+  Sprite grenouilleSprite;
+  if(!grenouilleTexture.loadFromFile("grenouille.png")) {
+   	window.close();
     	cout <<"ERROR : texture failed to load.";
-    }
-    grenouilleSprite.setTexture(grenouilleTexture);
-    grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
+  }
+  grenouilleSprite.setTexture(grenouilleTexture);
+  grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
     
     
 
