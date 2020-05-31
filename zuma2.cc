@@ -420,7 +420,15 @@ int main() {
   double sourisx = 0;
   double sourisy = 0;
   
-  
+    
+    if(!grenouilleTexture.loadFromFile("grenouille.png")) {
+    	window.close();
+    	cout <<"ERROR : texture failed to load.";
+    }
+    grenouilleSprite.setTexture(grenouilleTexture);
+    grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
+    
+    
 
   Clock clock;
 
@@ -518,16 +526,9 @@ int main() {
 
     //couleur=la couleur de fond (a changer plus tard)
     window.clear(Color::White);
-      
-     if(!grenouilleTexture.loadFromFile("grenouille.png")) {
-    	window.close();
-    	cout <<"ERROR : texture failed to load.";
-    }
-    grenouilleSprite.setTexture(grenouilleTexture);
-    grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
     
+    //Affichage de la grenouille
     window.draw(grenouilleSprite);
-    
     
 	//Affichage billes:
     for (int i = 0; i < nBilles; ++i) {
