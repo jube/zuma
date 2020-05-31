@@ -448,7 +448,7 @@ int main() {
     	cout <<"ERROR : texture failed to load.";
   }
   victoireSprite.setTexture(victoireTexture);
-  grenouilleSprite.setPosition(0,0);
+  victoireSprite.setPosition(0,0);
 
   Clock clock;
 
