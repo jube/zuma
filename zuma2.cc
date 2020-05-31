@@ -423,11 +423,13 @@ int main() {
   Texture grenouilleTexture;
   Texture perduTexture;
   Texture victoireTexture;
+  Texture ecranATexture;
   
   //Les sprite
   Sprite grenouilleSprite;
   Sprite perduSprite;
   Sprite victoireSprite;
+  Sprite ecranASprite;
   
   if(!grenouilleTexture.loadFromFile("Grenouille.png")) {
    	window.close();
@@ -449,6 +451,13 @@ int main() {
   }
   victoireSprite.setTexture(victoireTexture);
   victoireSprite.setPosition(0,0);
+
+  if(!ecranATexture.loadFromFile("ecranAccueil.png")) {
+   	window.close();
+    	cout <<"ERROR : texture failed to load.";
+  }
+  ecranASprite.setTexture(ecranATexture);
+  ecranASprite.setPosition(0,0);
 
   Clock clock;
 
