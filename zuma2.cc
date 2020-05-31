@@ -314,7 +314,7 @@ int explosion(int j, Bille tabBille[], int nBilles, int score) {
 	  	nBilles = newNBilles;
 		j = borne2-1;	  
 	  }
-  } while(borne1-borne2>=2 && newNBilles >0);
+  } while(borne1-borne2>=2);
   return newNBilles;
 }
 
@@ -421,9 +421,14 @@ int main() {
   
   //Les textures
   Texture grenouilleTexture;
+  Texture perduTexture;
+  Texture victoireTexture;
   
   //Les sprite
   Sprite grenouilleSprite;
+  Sprite perduSprite;
+  Sprite victoireSprite;
+  
   if(!grenouilleTexture.loadFromFile("Grenouille.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
@@ -431,17 +436,29 @@ int main() {
   grenouilleSprite.setTexture(grenouilleTexture);
   grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
     
-    
+  if(!perduTexture.loadFromFile("perdu.png")) {
+   	window.close();
+    	cout <<"ERROR : texture failed to load.";
+  }
+  perduSprite.setTexture(perduTexture);
+  perduSprite.setPosition(0,0);
+  
+  if(!victoireTexture.loadFromFile("victoire.png")) {
+   	window.close();
+    	cout <<"ERROR : texture failed to load.";
+  }
+  victoireSprite.setTexture(victoireTexture);
+  grenouilleSprite.setPosition(0,0);
 
   Clock clock;
 
-  while (!perdu && !gagne && window.isOpen()) {
+  while (window.isOpen()) {
 
     Event event;
     while (window.pollEvent(event)) {
 
       //pour fermer la fenetre quand on clique sur la croix
-      if ((event.type == Event::Closed) || (perdu == true)) {
+      if (event.type == Event::Closed) {
         window.close();
       }
 
@@ -551,7 +568,12 @@ int main() {
     reserve.setFillColor(billeReserve.color);
     window.draw(reserve);
     
-  
+    //Affichage de l'écran final
+    if(perdu) {
+    	window.draw(perduSprite);
+    } else if(gagne) {
+    	window.draw(victoireSprite);
+    }
     
     window.display();
   }//fin de la while de window.isOpen
