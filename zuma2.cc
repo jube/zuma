@@ -351,6 +351,9 @@ int main() {
   //vrai quand l'utilisateur a gagné (quand il a éliminé toutes les billes du circuit) 
   //si vrai, le jeu s'arrête
   bool gagne = false;
+  
+  //Vrai si on choisit de rejouer, et si la partie vient de commencer
+  bool ecranA = true;
 
   //Constante modélisant la vitesse des billes sur le circuit
   const int SPEED=10;
@@ -476,6 +479,18 @@ int main() {
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
       }
+      
+      //pour rejouer lorsque l'on appuie qqp sur l'écran
+      if (((event.type == sf::Event::MouseButtonPressed)&&(perdu)) || ((event.type == sf::Event::MouseButtonPressed)&&(gagne))) {
+      	perdu = false;
+      	gagne = false;
+      	ecranA = true;
+      } else if((event.type == sf::Event::MouseButtonPressed)&&(ecranA)) {
+        ecranA = false;
+        perdu = false;
+        gagne = false;
+      }
+      
 
      //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
      if (event.type == Event::KeyPressed) {
@@ -488,103 +503,107 @@ int main() {
 
     }//fin de while window.pollEvent
 
+    if(ecranA) {
+    	window.draw(ecranASprite);
+    	window.display();
+    } else {
+	    float dt = clock.restart().asSeconds();
+	    double distance = SPEED*dt;
+	    double distanceLance = SPEEDLANCE *dt;
+	    
+	    
+	    //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
+	    n=rangerTabCol(nBilles,tabBille,tabCol);
 
-    float dt = clock.restart().asSeconds();
-    double distance = SPEED*dt;
-    double distanceLance = SPEEDLANCE *dt;
-    
-    
-    //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
-    n=rangerTabCol(nBilles,tabBille,tabCol);
+	   
+		//pour que les billes attendent lorsqu'une explosion se produit
+	    for (int i = nBilles-1; i >=0; --i) {
+	    	if (i==nBilles-1){
+	     	  tabBille[i].x += distance ;
+	     	 } else if (collision(tabBille[i+1],tabBille[i])){
+	     	 	tabBille[i].x += distance;
+	     	 }
+	    }
 
-   
-	//pour que les billes attendent lorsqu'une explosion se produit
-    for (int i = nBilles-1; i >=0; --i) {
-    	if (i==nBilles-1){
-     	  tabBille[i].x += distance ;
-     	 } else if (collision(tabBille[i+1],tabBille[i])){
-     	 	tabBille[i].x += distance;
-     	 }
-    }
+	    if (deplacer){
+	      if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
+	      	billeLance.x = initx;
+	      	billeLance.y = inity;
+	     	deplacer = false;
+	     	billeLance.color = getRandomCol(n, tabCol);
+	     	Color echange = billeLance.color;
+		    billeLance.color= billeReserve.color;
+		    billeReserve.color=echange;
+	      }
+	      
+	      for (int j = 0;j<nBilles; ++j){
+		if(collision(billeLance, tabBille[j])){
+		  ++nBilles;
+		  incruster(billeLance, tabBille, j, nBilles);
+		  int nAvant=n;
+			  nBilles=explosion(j, tabBille, nBilles, score);
+	   		  n=rangerTabCol(nBilles,tabBille,tabCol);
+	   		   //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
+	   		  if(nAvant!=n){
+		 	    billeReserve.color=getRandomCol(n, tabCol);
+	   		  }
+		  
+		  if (nBilles == 0) {
+		     gagne = true;
+		  }
+		  billeLance.x = initx;
+		  billeLance.y = inity;
+		  billeLance.color = getRandomCol(n, tabCol);
+		  deplacer = false;
+		  Color echange = billeLance.color;
+		  billeLance.color= billeReserve.color;
+		  billeReserve.color=echange;
+		}
+	       }
+	      hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
+	      billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
+	      billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
+	    }
 
-    if (deplacer){
-      if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
-      	billeLance.x = initx;
-      	billeLance.y = inity;
-     	deplacer = false;
-     	billeLance.color = getRandomCol(n, tabCol);
-     	Color echange = billeLance.color;
-	    billeLance.color= billeReserve.color;
-	    billeReserve.color=echange;
-      }
-      
-      for (int j = 0;j<nBilles; ++j){
-        if(collision(billeLance, tabBille[j])){
-          ++nBilles;
-          incruster(billeLance, tabBille, j, nBilles);
-          int nAvant=n;
-		  nBilles=explosion(j, tabBille, nBilles, score);
-   		  n=rangerTabCol(nBilles,tabBille,tabCol);
-   		   //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
-   		  if(nAvant!=n){
-	 	    billeReserve.color=getRandomCol(n, tabCol);
-   		  }
-	  
-	  if (nBilles == 0) {
-	     gagne = true;
-          }
-          billeLance.x = initx;
-          billeLance.y = inity;
-	  billeLance.color = getRandomCol(n, tabCol);
-	  deplacer = false;
-	  Color echange = billeLance.color;
-	  billeLance.color= billeReserve.color;
-	  billeReserve.color=echange;
-        }
-       }
-      hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
-      billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
-      billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
-    }
+	  //Pour savoir si on a perdu
+	 float dist = tabBille[0].x +tabBille[0].rayon;
+	 if (dist >= SCREENW) {
+		perdu = true;
+	 }
 
-  //Pour savoir si on a perdu
- float dist = tabBille[0].x +tabBille[0].rayon;
- if (dist >= SCREENW) {
-	perdu = true;
- }
+	    //couleur=la couleur de fond (a changer plus tard)
+	    window.clear(Color::White);
+	    
+	    //Affichage de la grenouille
+	    window.draw(grenouilleSprite);
+	    
+		//Affichage billes:
+	    for (int i = 0; i < nBilles; ++i) {
+	   	CircleShape shape(tabBille[i].rayon);
+	    	shape.setPosition(tabBille[i].x-billeLance.rayon, tabBille[i].y-billeLance.rayon);
+	    	shape.setFillColor(tabBille[i].color);
+	    	window.draw(shape);
+	   }
+	    
+	    CircleShape lancer(billeLance.rayon);
+	    lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
+	    lancer.setFillColor(billeLance.color);
+	    window.draw(lancer);
 
-    //couleur=la couleur de fond (a changer plus tard)
-    window.clear(Color::White);
-    
-    //Affichage de la grenouille
-    window.draw(grenouilleSprite);
-    
-	//Affichage billes:
-    for (int i = 0; i < nBilles; ++i) {
-   	CircleShape shape(tabBille[i].rayon);
-    	shape.setPosition(tabBille[i].x-billeLance.rayon, tabBille[i].y-billeLance.rayon);
-    	shape.setFillColor(tabBille[i].color);
-    	window.draw(shape);
-   }
-    
-    CircleShape lancer(billeLance.rayon);
-    lancer.setPosition(billeLance.x-billeLance.rayon, billeLance.y-billeLance.rayon);
-    lancer.setFillColor(billeLance.color);
-    window.draw(lancer);
-
-    CircleShape reserve(billeReserve.rayon);
-    reserve.setPosition(billeReserve.x-billeReserve.rayon, billeReserve.y-billeReserve.rayon);
-    reserve.setFillColor(billeReserve.color);
-    window.draw(reserve);
-    
-    //Affichage de l'écran final
-    if(perdu) {
-    	window.draw(perduSprite);
-    } else if(gagne) {
-    	window.draw(victoireSprite);
-    }
-    
-    window.display();
+	    CircleShape reserve(billeReserve.rayon);
+	    reserve.setPosition(billeReserve.x-billeReserve.rayon, billeReserve.y-billeReserve.rayon);
+	    reserve.setFillColor(billeReserve.color);
+	    window.draw(reserve);
+	    
+	    //Affichage de l'écran final
+	    if(perdu) {
+	    	window.draw(perduSprite);
+	    } else if(gagne) {
+	    	window.draw(victoireSprite);
+	    }
+	}
+	    
+  window.display();
   }//fin de la while de window.isOpen
   return 0;
 }//fin de Main
