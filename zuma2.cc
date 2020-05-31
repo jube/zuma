@@ -424,7 +424,7 @@ int main() {
   
   //Les sprite
   Sprite grenouilleSprite;
-  if(!grenouilleTexture.loadFromFile("grenouille.png")) {
+  if(!grenouilleTexture.loadFromFile("Grenouille.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
