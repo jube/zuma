@@ -359,7 +359,7 @@ int main() {
   const int SPEED=10;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
-  const int SPEEDLANCE=60;
+  const int SPEEDLANCE=300;
 
   //Rayon de la bille
   const int RAYONBILLE=10;
@@ -549,11 +549,12 @@ while (window.isOpen()) {
 	billeLance.color= billeReserve.color;
 	billeReserve.color=echange;
       }
+      }
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
       billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
-  }
+  
 
   //Pour savoir si on a perdu
   float dist = tabBille[0].x +tabBille[0].rayon;
