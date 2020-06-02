@@ -474,6 +474,22 @@ int main() {
   ecranASprite.setTexture(ecranATexture);
   ecranASprite.setPosition(0,0);
 
+
+  
+//Font et texte pour les niveaux
+  String numNiveau = "Niveau : " + to_string(nbParties);
+  Font font;
+  if(!font.loadFromFile("arial.ttf")) {
+  	window.close();
+    	cout <<"ERROR : texture failed to load.";
+  }
+  Text text;
+  text.setFont(font);
+  text.setString(numNiveau);
+  text.setCharacterSize(20);
+  text.setFillColor(Color::Black);
+  text.setPosition(40, 70);
+  
   Clock clock;
 
 while (window.isOpen()) {
@@ -608,6 +624,9 @@ while (window.isOpen()) {
   reserve.setPosition(billeReserve.x-billeReserve.rayon, billeReserve.y-billeReserve.rayon);
   reserve.setFillColor(billeReserve.color);
   window.draw(reserve);
+  
+  //Affichage du niveau 
+  window.draw(text);
     
   //Affichage de l'écran final
   if(perdu) {
@@ -627,10 +646,14 @@ while (window.isOpen()) {
   		nbParties+=1;
   		SPEED+=5;
  		nBilles=10+nbParties*2;
+ 		numNiveau = "Niveau : " + to_string(nbParties);
+ 		text.setString(numNiveau);
   	}else if(perdu){
   		nbParties=1;
   		SPEED=10;
   		nBilles=10;
+ 		numNiveau = "Niveau : " + to_string(nbParties);
+ 		text.setString(numNiveau);
   	}
 	perdu=false;
 	gagne=false;
