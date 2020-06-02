@@ -497,7 +497,7 @@ while (window.isOpen()) {
     
     
     //Pour sortir de l'écran d'accueil
-     if ((event.type == sf::Event::MouseButtonPressed) and ecranA){
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((event.mouseButton.x>0)and(event.mouseButton.x<256))and ((event.mouseButton.y>0)and(event.mouseButton.y<112))){
         ecranA=false;
     }  
 
