@@ -388,7 +388,7 @@ int main() {
   //Initialisation de toutes les billes du tableau en début de partie 
   for (int i = 0; i < nBilles; ++i) {
       tabBille[i].x = 100-(20*i);
-      tabBille[i].y = 10;
+      tabBille[i].y = 40;
       tabBille[i].rayon = RAYONBILLE;
       tabBille[i].color = getRandomCol(n, tabCol);
   }
@@ -508,8 +508,10 @@ while (window.isOpen()) {
   for (int i = nBilles-1; i >=0; --i) {
      if (i==nBilles-1){
      	 tabBille[i].x += distance ;
+     	 tabBille[i].y = 40 + cos(tabBille[i].x);
      } else if (collision(tabBille[i+1],tabBille[i])){
      	 tabBille[i].x += distance;
+     	 tabBille[i].y = 40 + cos(tabBille[i].x);
      }
   }
 
