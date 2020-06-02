@@ -354,6 +354,9 @@ int main() {
   
   //Vrai si on choisit de rejouer, et si la partie vient de commencer
   bool ecranA = true;
+  
+  //vrai si on choisit de rejouer
+  bool rejouer= false;
 
   //Constante modélisant la vitesse des billes sur le circuit
   const int SPEED=10;
@@ -492,6 +495,11 @@ while (window.isOpen()) {
         ecranA=false;
     }  
 
+	//pour rejouer
+	  if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
+        rejouer=true;
+    }  
+
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
 	if (event.key.code == sf::Keyboard::Space){
@@ -565,7 +573,6 @@ while (window.isOpen()) {
       billeLance.y+= ((sourisy-inity)/hyp)*distanceLance;
     }
   
-
   //Pour savoir si on a perdu
   float dist = tabBille[0].x +tabBille[0].rayon;
   if (dist >= SCREENW) {
@@ -606,6 +613,23 @@ while (window.isOpen()) {
   //affichage de l'écran d'accueil 
   if(ecranA){
  	 window.draw(ecranASprite);
+  }
+  
+  //Remise à zero des variables nécéssaire pour rejouer
+  if(rejouer){
+  	nBilles=10;
+	perdu=false;
+	gagne=false;
+	score=0;
+	n=4;
+	 for (int i = 0; i < nBilles; ++i) {
+      tabBille[i].x = 100-(20*i);
+      tabBille[i].y = 40;
+      tabBille[i].rayon = RAYONBILLE;
+      tabBille[i].color = getRandomCol(n, tabCol);
+ 	 }
+ 	 rejouer=false;
+ 	 ecranA=true;
   }
   
   
