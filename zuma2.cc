@@ -481,11 +481,16 @@ while (window.isOpen()) {
     }
       
     //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
-    if ((event.type == sf::Event::MouseButtonPressed)&&(!deplacer)){
+    if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA){
         deplacer=true;
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
     }
+    
+    //Pour sortir de l'écran d'accueil
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA){
+        ecranA=false;
+    }  
 
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
@@ -515,7 +520,7 @@ while (window.isOpen()) {
      }
   }
 
-  if (deplacer){
+  if (deplacer and !ecranA){
     if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
       	billeLance.x = initx;
       	billeLance.y = inity;
@@ -594,6 +599,13 @@ while (window.isOpen()) {
   } else if(gagne) {
     	window.draw(victoireSprite);
   } 
+  
+  //affichage de l'écran d'accueil 
+  if(ecranA){
+ 	 window.draw(ecranASprite);
+  }
+  
+  
   window.display();
 }//fin de la while de window.isOpen
 return 0;
