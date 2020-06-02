@@ -358,14 +358,17 @@ int main() {
   //vrai si on choisit de rejouer
   bool rejouer= false;
 
-  //Constante modélisant la vitesse des billes sur le circuit
-  const int SPEED=20;
+  //Entier modélisant la vitesse des billes sur le circuit
+  int SPEED=20;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=300;
 
   //Rayon de la bille
   const int RAYONBILLE=10;
+  
+  //Nombre de parties jouer par le joueur
+  int nbParties=1;
 
   //Variable modélisant le score (initialisé à 0)
   int score = 0;
@@ -618,9 +621,17 @@ while (window.isOpen()) {
  	 window.draw(ecranASprite);
   }
   
-  //Remise à zero des variables nécéssaire pour rejouer
+  //Remise à zero des variables nécéssaire pour rejouer et met a jour le niveau de difficulté
   if(rejouer){
-  	nBilles=10;
+  	if(gagne){
+  		nbParties+=1;
+  		SPEED+=5;
+ 		nBilles=10+nbParties*2;
+  	}else if(perdu){
+  		nbParties=1;
+  		SPEED=20;
+  		nBilles=10;
+  	}
 	perdu=false;
 	gagne=false;
 	score=0;
@@ -633,6 +644,7 @@ while (window.isOpen()) {
  	 }
  	 rejouer=false;
  	 ecranA=true;
+ 	 
   }
   
   
