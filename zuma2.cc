@@ -359,7 +359,7 @@ int main() {
   bool rejouer= false;
 
   //Entier modélisant la vitesse des billes sur le circuit
-  int SPEED=20;
+  int SPEED=10;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=300;
@@ -538,14 +538,14 @@ while (window.isOpen()) {
 	}
 
   if (deplacer and !ecranA){
-    if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
+    if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > SCREENW)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > SCREENH)){
       	billeLance.x = initx;
       	billeLance.y = inity;
      	deplacer = false;
      	billeLance.color = getRandomCol(n, tabCol);
      	Color echange = billeLance.color;
-	billeLance.color= billeReserve.color;
-	billeReserve.color=echange;
+		billeLance.color= billeReserve.color;
+		billeReserve.color=echange;
      }
       
     for (int j = 0;j<nBilles; ++j){
@@ -629,7 +629,7 @@ while (window.isOpen()) {
  		nBilles=10+nbParties*2;
   	}else if(perdu){
   		nbParties=1;
-  		SPEED=20;
+  		SPEED=10;
   		nBilles=10;
   	}
 	perdu=false;
@@ -644,7 +644,6 @@ while (window.isOpen()) {
  	 }
  	 rejouer=false;
  	 ecranA=true;
- 	 
   }
   
   
