@@ -359,7 +359,7 @@ int main() {
   bool rejouer= false;
 
   //Constante modélisant la vitesse des billes sur le circuit
-  const int SPEED=10;
+  const int SPEED=20;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=300;
@@ -482,23 +482,26 @@ while (window.isOpen()) {
     if (event.type == Event::Closed) {
         window.close();
     }
+    
+    //pour rejouer
+	  if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
+        rejouer=true;
+    }  
       
     //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
-    if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA){
+    if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA and !rejouer){
         deplacer=true;
         sourisx = event.mouseButton.x;
         sourisy = event.mouseButton.y;
     }
+    
     
     //Pour sortir de l'écran d'accueil
      if ((event.type == sf::Event::MouseButtonPressed) and ecranA){
         ecranA=false;
     }  
 
-	//pour rejouer
-	  if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
-        rejouer=true;
-    }  
+	
 
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
