@@ -509,16 +509,19 @@ while (window.isOpen()) {
   //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
   n=rangerTabCol(nBilles,tabBille,tabCol);
    
-  //pour que les billes attendent lorsqu'une explosion se produit
-  for (int i = nBilles-1; i >=0; --i) {
-     if (i==nBilles-1){
-     	 tabBille[i].x += distance ;
-     	 tabBille[i].y = 40 + cos(tabBille[i].x);
-     } else if (collision(tabBille[i+1],tabBille[i])){
-     	 tabBille[i].x += distance;
-     	 tabBille[i].y = 40 + cos(tabBille[i].x);
-     }
-  }
+   
+   //pour que les billes avancent et attendent lorsqu'une explosion se produit
+   if(!ecranA){
+ 	 for (int i = nBilles-1; i >=0; --i) {
+    	 if (i==nBilles-1){
+    	 	 tabBille[i].x += distance ;
+    	 	 tabBille[i].y = 40 + cos(tabBille[i].x);
+   	  } else if (collision(tabBille[i+1],tabBille[i])){
+    	 	 tabBille[i].x += distance;
+   	  	 tabBille[i].y = 40 + cos(tabBille[i].x);
+  	   }
+	  }
+	}
 
   if (deplacer and !ecranA){
     if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > 800)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > 600)){
