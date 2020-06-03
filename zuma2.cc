@@ -503,7 +503,7 @@ while (window.isOpen()) {
     }
     
     //pour rejouer
-	  if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
+    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
         rejouer=true;
     }  
       
@@ -545,13 +545,13 @@ while (window.isOpen()) {
  	 for (int i = nBilles-1; i >=0; --i) {
     	 if (i==nBilles-1){
     	 	 tabBille[i].x += distance ;
-    	 	 tabBille[i].y = 40 + cos(tabBille[i].x);
+    	 	// tabBille[i].y = 40 + cos(tabBille[i].x);
    	  } else if (collision(tabBille[i+1],tabBille[i])){
     	 	 tabBille[i].x += distance;
-   	  	 tabBille[i].y = 40 + cos(tabBille[i].x);
+   	  	// tabBille[i].y = 40 + cos(tabBille[i].x);
   	   }
 	  }
-	}
+  }
 
   if (deplacer and !ecranA){
     if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > SCREENW)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > SCREENH)){
@@ -560,35 +560,35 @@ while (window.isOpen()) {
      	deplacer = false;
      	billeLance.color = getRandomCol(n, tabCol);
      	Color echange = billeLance.color;
-		billeLance.color= billeReserve.color;
-		billeReserve.color=echange;
+	billeLance.color= billeReserve.color;
+	billeReserve.color=echange;
      }
       
     for (int j = 0;j<nBilles; ++j){
       if(collision(billeLance, tabBille[j])){
 	  ++nBilles;
 	  incruster(billeLance, tabBille, j, nBilles);
-	  int nAvant=n;
 	  nBilles=explosion(j, tabBille, nBilles, score);
+	  int nAvant=n;
    	  n=rangerTabCol(nBilles,tabBille,tabCol);
           //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
    	  if(nAvant!=n){
 	  	billeReserve.color=getRandomCol(n, tabCol);
-   	}
+   	  }
 	  
-	//calcul de la victoire ou non de l'utilisateur (true s'il a gagné)
-	if (nBilles == 0) {
+	  //calcul de la victoire ou non de l'utilisateur (true s'il a gagné)
+	  if (nBilles == 0) {
 	     gagne = true;
-	}
+	  }
 	  
-	billeLance.x = initx;
-	billeLance.y = inity;
-	billeLance.color = getRandomCol(n, tabCol);
-	deplacer = false;
-	Color echange = billeLance.color;
-	billeLance.color= billeReserve.color;
-	billeReserve.color=echange;
-      }
+	  billeLance.x = initx;
+	  billeLance.y = inity;
+	  billeLance.color = getRandomCol(n, tabCol);
+	  deplacer = false;
+	  Color echange = billeLance.color;
+	  billeLance.color= billeReserve.color;
+	  billeReserve.color=echange;
+        }
       }
       hyp = sqrt((sourisx-initx)*(sourisx-initx)+(sourisy-inity)*(sourisy-inity));
       billeLance.x+= ((sourisx-initx)/hyp)*distanceLance;
