@@ -358,6 +358,9 @@ int main() {
   //vrai si on choisit de rejouer
   bool rejouer= false;
 
+  //vrai si le joueur clique sur info
+  bool info=false;
+
   //Entier modélisant la vitesse des billes sur le circuit
   int SPEED=10;
 
@@ -433,12 +436,14 @@ int main() {
   Texture perduTexture;
   Texture victoireTexture;
   Texture ecranATexture;
+  Texture infoTexture;
   
   //Les sprite
   Sprite grenouilleSprite;
   Sprite perduSprite;
   Sprite victoireSprite;
   Sprite ecranASprite;
+  Sprite infoSprite;
   
   //Création du sprite grenouille, qui sert à afficher l'image de la grenouille
   if(!grenouilleTexture.loadFromFile("Grenouille.png")) {
@@ -473,6 +478,14 @@ int main() {
   }
   ecranASprite.setTexture(ecranATexture);
   ecranASprite.setPosition(0,0);
+  
+  //Création du sprite d'écran d'information
+  if(!infoTexture.loadFromFile("info.png")) {
+   	window.close();
+    	cout <<"ERROR : texture failed to load.";
+  }
+  infoSprite.setTexture(infoTexture);
+  infoSprite.setPosition(0,0);
 
 
   
@@ -483,6 +496,7 @@ int main() {
   	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
+  
   Text text;
   text.setFont(font);
   text.setString(numNiveau);
@@ -497,6 +511,13 @@ while (window.isOpen()) {
   Event event;
   while (window.pollEvent(event)) {
 
+	 //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
+    if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA and !rejouer and !info and !gagne and !perdu){
+        deplacer=true;
+        sourisx = event.mouseButton.x;
+        sourisy = event.mouseButton.y;
+    }
+
     //pour fermer la fenetre quand on clique sur la croix
     if (event.type == Event::Closed) {
         window.close();
@@ -507,20 +528,23 @@ while (window.isOpen()) {
         rejouer=true;
     }  
       
-    //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
-    if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA and !rejouer){
-        deplacer=true;
-        sourisx = event.mouseButton.x;
-        sourisy = event.mouseButton.y;
-    }
     
-    
-    //Pour sortir de l'écran d'accueil
+    //Pour jouer a partir de l'écran d'accueil
      if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<256))and ((0<event.mouseButton.y)and(event.mouseButton.y<112))){
         ecranA=false;
     }  
-
-	
+    
+     //Pour aller au infos à partir de l'écran d'accueil
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<57)) and ((SCREENH-60<event.mouseButton.y)and(event.mouseButton.y<SCREENH))){
+        ecranA=false;
+        info=true;
+    }
+    
+    //Pour quitter les infos
+	if ((event.type == sf::Event::MouseButtonPressed) and info and ((SCREENW-58<event.mouseButton.x) and (event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y)and(event.mouseButton.y<54))){
+        ecranA=true;
+        info=false;
+    }
 
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
@@ -530,6 +554,9 @@ while (window.isOpen()) {
 	     billeReserve.color=echange;
 	}
     }
+    
+    
+    
   }//fin de while window.pollEvent
 
   float dt = clock.restart().asSeconds();
@@ -553,7 +580,7 @@ while (window.isOpen()) {
 	  }
   }
 
-  if (deplacer and !ecranA){
+  if (deplacer and !ecranA and !info and !perdu and !gagne){
     if ((billeLance.x<0 )||(billeLance.x + billeLance.rayon > SCREENW)||(billeLance.y<0 )||(billeLance.y + billeLance.rayon > SCREENH)){
       	billeLance.x = initx;
       	billeLance.y = inity;
@@ -639,6 +666,12 @@ while (window.isOpen()) {
   if(ecranA){
  	 window.draw(ecranASprite);
   }
+  
+  //affichage de l'écran d'informations
+  if(info){
+ 	 window.draw(infoSprite);
+  }
+  
   
   //Remise à zero des variables nécéssaire pour rejouer et met a jour le niveau de difficulté
   if(rejouer){
