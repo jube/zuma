@@ -503,7 +503,7 @@ while (window.isOpen()) {
     }
     
     //pour rejouer
-    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.y>0)and (event.mouseButton.y<100))){
+    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((SCREENW-100<event.mouseButton.x) and(event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y) and (event.mouseButton.y<100))){
         rejouer=true;
     }  
       
@@ -516,7 +516,7 @@ while (window.isOpen()) {
     
     
     //Pour sortir de l'écran d'accueil
-     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((event.mouseButton.x>0)and(event.mouseButton.x<256))and ((event.mouseButton.y>0)and(event.mouseButton.y<112))){
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<256))and ((0<event.mouseButton.y)and(event.mouseButton.y<112))){
         ecranA=false;
     }  
 
