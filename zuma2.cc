@@ -44,8 +44,7 @@ struct Bille {
 struct Grenouille{
   float x;
   float y;
-  float rayon;
-  Color color ;
+  int score;
   Bille lance;
   Bille reserve;
 };
@@ -281,7 +280,7 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
   for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
         tabBille[borne2+i]=tabBille[borne1+1+i];
   }
-  return ((nBilles-(borne1-borne2+1))*10);
+  return ((borne1-borne2+1)*10);
 }
 
 /**
@@ -330,11 +329,9 @@ int main() {
 
   //Initialisation de la grenouille ainsi que de sa position au centre du plateau
   Grenouille grenouille;
-  grenouille.rayon = 64;
-  grenouille.x = (SCREENW - grenouille.rayon/2) / 2;
-  grenouille.y = (SCREENH - grenouille.rayon/2) / 2 ;
-  grenouille.color = Color::Black;
-
+  grenouille.x = (SCREENW - 32) / 2;
+  grenouille.y = (SCREENH - 32) / 2;
+  grenouille.score = 0;
   ////VARIABLES////
   //Les constantes sont initialisées au hasard (à changer)
   //constante nombre de billes créées en début de partie
@@ -373,8 +370,6 @@ int main() {
   //Nombre de parties jouer par le joueur
   int nbParties=1;
 
-  //Variable modélisant le score (initialisé à 0)
-  int score = 0;
 
   //caractères associés aux couleurs
   char tabCol[4];
@@ -595,7 +590,7 @@ while (window.isOpen()) {
       if(collision(billeLance, tabBille[j])){
 	  ++nBilles;
 	  incruster(billeLance, tabBille, j, nBilles);
-	  nBilles=explosion(j, tabBille, nBilles, score);
+	  nBilles=explosion(j, tabBille, nBilles, grenouille.score);
 	  int nAvant=n;
    	  n=rangerTabCol(nBilles,tabBille,tabCol);
           //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
@@ -690,7 +685,7 @@ while (window.isOpen()) {
   	}
 	perdu=false;
 	gagne=false;
-	score=0;
+	grenouille.score=0;
 	n=4;
 	 for (int i = 0; i < nBilles; ++i) {
       tabBille[i].x = 100-(20*i);
