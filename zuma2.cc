@@ -323,8 +323,8 @@ int main() {
  
 
   //Constantes représentant la largeur et la hauteur de la fenêtre de jeu
-  const int SCREENW=800;
-  const int SCREENH=600;
+  const int SCREENW=1200;
+  const int SCREENH=900;
   RenderWindow window(VideoMode(SCREENW, SCREENH), "ZUMA");
 
   //Initialisation de la grenouille ainsi que de sa position au centre du plateau
@@ -362,10 +362,10 @@ int main() {
   int SPEED=10;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
-  const int SPEEDLANCE=300;
+  const int SPEEDLANCE=500;
 
   //Rayon de la bille
-  const int RAYONBILLE=10;
+  const int RAYONBILLE=15;
   
   //Nombre de parties jouer par le joueur
   int nbParties=1;
@@ -391,7 +391,7 @@ int main() {
   
   //Initialisation de toutes les billes du tableau en début de partie 
   for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].x = 100-(20*i);
+      tabBille[i].x = 200-(2*RAYONBILLE*i);
       tabBille[i].y = 40;
       tabBille[i].rayon = RAYONBILLE;
       tabBille[i].color = getRandomCol(n, tabCol);
@@ -402,16 +402,16 @@ int main() {
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
-  billeLance.rayon = 10;
-  billeLance.x = (SCREENW+260) / 2;
-  billeLance.y = (SCREENH+120) / 2;
+  billeLance.rayon = RAYONBILLE;
+  billeLance.x = (SCREENW+400) / 2;
+  billeLance.y = (SCREENH+280) / 2;
   billeLance.color = getRandomCol(n, tabCol);
 
   //bille permettant de modéliser la bille en réserve (qui peut être échangée avec la bille lance en cas d'appui sur la barre espace, et qui est la prochaine bille proposée pour être lancée)
   Bille billeReserve;
-  billeReserve.rayon = 10;
-  billeReserve.x = (SCREENW+430)/2;
-  billeReserve.y = (SCREENH+300)/2;
+  billeReserve.rayon = RAYONBILLE;
+  billeReserve.x = (SCREENW+625)/2;
+  billeReserve.y = (SCREENH+510)/2;
   billeReserve.color = getRandomCol(n, tabCol);
  
  
@@ -419,8 +419,8 @@ int main() {
   bool deplacer = false;
   
   //Position initiale de la bille qui est lancée
-  double initx = (SCREENW+270) / 2;
-  double inity =(SCREENH+130) / 2;
+  double initx = (SCREENW+400) / 2;
+  double inity =(SCREENH+280) / 2;
   
   //Variables qui servent à récupérer la position du clic de la souris lorsque l'utilisateur souhaite lancer une bille
   double sourisx = 0;
@@ -495,7 +495,7 @@ int main() {
   Text text;
   text.setFont(font);
   text.setString(numNiveau);
-  text.setCharacterSize(20);
+  text.setCharacterSize(30);
   text.setFillColor(Color::Black);
   text.setPosition(40, 70);
   
@@ -519,24 +519,24 @@ while (window.isOpen()) {
     }
     
     //pour rejouer
-    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((SCREENW-100<event.mouseButton.x) and(event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y) and (event.mouseButton.y<100))){
+    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((SCREENW-175<event.mouseButton.x) and(event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y) and (event.mouseButton.y<157))){
         rejouer=true;
     }  
       
     
     //Pour jouer a partir de l'écran d'accueil
-     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<256))and ((0<event.mouseButton.y)and(event.mouseButton.y<112))){
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<385))and ((0<event.mouseButton.y)and(event.mouseButton.y<165))){
         ecranA=false;
     }  
     
      //Pour aller au infos à partir de l'écran d'accueil
-     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<57)) and ((SCREENH-60<event.mouseButton.y)and(event.mouseButton.y<SCREENH))){
+     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<84)) and ((SCREENH-86<event.mouseButton.y)and(event.mouseButton.y<SCREENH))){
         ecranA=false;
         info=true;
     }
     
     //Pour quitter les infos
-	if ((event.type == sf::Event::MouseButtonPressed) and info and ((SCREENW-58<event.mouseButton.x) and (event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y)and(event.mouseButton.y<54))){
+	if ((event.type == sf::Event::MouseButtonPressed) and info and ((SCREENW-87<event.mouseButton.x) and (event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y)and(event.mouseButton.y<87))){
         ecranA=true;
         info=false;
     }
@@ -688,7 +688,7 @@ while (window.isOpen()) {
 	grenouille.score=0;
 	n=4;
 	 for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].x = 100-(20*i);
+      tabBille[i].x = 200-(2*RAYONBILLE*i);
       tabBille[i].y = 40;
       tabBille[i].rayon = RAYONBILLE;
       tabBille[i].color = getRandomCol(n, tabCol);
