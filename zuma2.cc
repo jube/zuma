@@ -503,7 +503,7 @@ while (window.isOpen()) {
     }
     
     //pour rejouer
-    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.x>0)and (event.mouseButton.x>100))){
+    if ((event.type == sf::Event::MouseButtonPressed) and (perdu or gagne) and ((event.mouseButton.x<SCREENW)and (event.mouseButton.x>SCREENW-100)) and((event.mouseButton.y>0)and (event.mouseButton.y<100))){
         rejouer=true;
     }  
       
@@ -525,7 +525,7 @@ while (window.isOpen()) {
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
 	if (event.key.code == sf::Keyboard::Space){
-             Color echange = billeLance.color;
+         Color echange = billeLance.color;
 	     billeLance.color= billeReserve.color;
 	     billeReserve.color=echange;
 	}
@@ -545,10 +545,10 @@ while (window.isOpen()) {
  	 for (int i = nBilles-1; i >=0; --i) {
     	 if (i==nBilles-1){
     	 	 tabBille[i].x += distance ;
-    	 	// tabBille[i].y = 40 + cos(tabBille[i].x);
+    	 	 tabBille[i].y = 40 + cos(tabBille[i].x);
    	  } else if (collision(tabBille[i+1],tabBille[i])){
     	 	 tabBille[i].x += distance;
-   	  	// tabBille[i].y = 40 + cos(tabBille[i].x);
+   	  	     tabBille[i].y = 40 + cos(tabBille[i].x);
   	   }
 	  }
   }
