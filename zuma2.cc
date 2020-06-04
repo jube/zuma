@@ -221,7 +221,8 @@ bool collision(Bille bille1, Bille bille2) {
 *@param nBilles le nombre de billes présentes sur le circuit
 */
 
-void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
+int incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
+  int newPlace = i;
   if (billeLance.x-tabBille[i].x >= 0){
   //incrustation à droite de la bille
     if (sqrt((tabBille[i].x-tabBille[i-1].x)*(tabBille[i].x-tabBille[i-1].x)+(tabBille[i].y-tabBille[i-1].y)*(tabBille[i].y-tabBille[i-1].y))<4*tabBille[0].rayon){
@@ -256,7 +257,6 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
         tabBille[j]=tabBille[j-1];
         }
         tabBille[i+1].color = billeLance.color;
-
         for (int k = i+1; k>0 ; --k){
           tabBille[k].x = tabBille[k-1].x;
           tabBille[k].y = tabBille[k-1].y;
@@ -271,7 +271,9 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
         tabBille[i+1].x= tabBille[i].x-tabBille[0].rayon*2;
       }
     }
+   newPlace = i+1;
   }
+  return newPlace ;
 }
 
 /**
@@ -615,7 +617,7 @@ while (window.isOpen()) {
     for (int j = 0;j<partie.nBilles; ++j){
       if(collision(billeLance, tabBille[j])){
 	  ++partie.nBilles;
-	  incruster(billeLance, tabBille, j, partie.nBilles);
+	  j=incruster(billeLance, tabBille, j, partie.nBilles);
 	  partie =explosion(j, tabBille, partie);
 	  scoreNum = "Score : " + to_string(partie.score);
 	  text2.setString(scoreNum);
