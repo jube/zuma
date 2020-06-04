@@ -654,7 +654,7 @@ while (window.isOpen()) {
   }
 
   //couleur=la couleur de fond (a changer plus tard)
-  window.clear(Color::White);
+  window.clear(Color (164, 255, 237));
     
   //Affichage de la grenouille
   window.draw(grenouilleSprite);
