@@ -731,6 +731,8 @@ while (window.isOpen()) {
 	perdu=false;
 	gagne=false;
 	partie.score=0;
+    scoreNum = "Score : " + to_string(partie.score);
+    text2.setString(scoreNum);
 	n=4;
 	for (int i = 0; i < partie.nBilles; ++i) {
            tabBille[i].x = 200-(2*RAYONBILLE*i);
