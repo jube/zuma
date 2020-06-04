@@ -19,12 +19,10 @@ struct Math {
 *
 *Structure permettant de modéliser une bille 
 *
-*@param posDimBille La variable de type PosDim qui donne les *coordonnées sur le plateau d'une bille ainsi que sa dimension
-*@param color La variable de type Color qui donne la couleur d'une bille
+*@param color : La variable de type Color qui donne la couleur d'une bille
 *@param x : l'abscisse d'un objet
 *@param y : l'ordonnée d'un objet 
 *@param rayon : le rayon d'un cercle
-*@param centre :
 */
 struct Bille {
   float x;
@@ -37,7 +35,9 @@ struct Bille {
 *
 *Structure permettant de modéliser la grenouille
 *
-*@param posGre La position de la grenouille sur le plateau
+*@param x L'abscisse de la grenouille
+*@param y L'ordonnée de la grenouille
+*@param score Le score de l'utilisateur durant la partie 
 *@param lance  La bille prête à être lancée par l'utilisateur
 *@param reserve La bille en réserve (la bille qui sera *lancée par l'utilisateur après qu'il ait utilisé la bille lance)
 */
@@ -294,7 +294,7 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 *@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
 */
 
-int explosion(int j, Bille tabBille[], int nBilles, int score) {
+int explosion(int j, Bille tabBille[], int nBilles, Grenouille grenouille) {
   int borne1 = j;
   int borne2 = j;
   int newNBilles = nBilles;
@@ -309,7 +309,7 @@ int explosion(int j, Bille tabBille[], int nBilles, int score) {
       }
       if(borne1-borne2>=2) {
 	    newNBilles = nBilles - (borne1-borne2+1);
-	    score = disparaitre(j, borne1, borne2, nBilles, tabBille);
+	    grenouille.score = disparaitre(j, borne1, borne2, nBilles, tabBille);
 	    nBilles = newNBilles;
 	    j = borne2-1;	  
       }
@@ -332,21 +332,22 @@ int main() {
   grenouille.x = (SCREENW - 32) / 2;
   grenouille.y = (SCREENH - 32) / 2;
   grenouille.score = 0;
+  
+  
   ////VARIABLES////
-  //Les constantes sont initialisées au hasard (à changer)
+
   //constante nombre de billes créées en début de partie
   const int NBILLESINIT=100;
 
   //nombre de billes restantes sur le circuit 
-  //initialisé grâce à la constante NBILLESINIT
   int nBilles=10;
 
   //vrai quand l'utilisateur a perdu (une bille atteint la fin du circuit) 
-  //si vrai, le jeu s'arrête
+  //si vrai, l'écran perdu s'affiche
   bool perdu = false;
 
   //vrai quand l'utilisateur a gagné (quand il a éliminé toutes les billes du circuit) 
-  //si vrai, le jeu s'arrête
+  //si vrai, l'écran victoire s'affiche
   bool gagne = false;
   
   //Vrai si on choisit de rejouer, et si la partie vient de commencer
@@ -367,7 +368,7 @@ int main() {
   //Rayon de la bille
   const int RAYONBILLE=15;
   
-  //Nombre de parties jouer par le joueur
+  //Nombre de parties jouées par le joueur
   int nbParties=1;
 
 
@@ -397,7 +398,7 @@ int main() {
       tabBille[i].color = getRandomCol(n, tabCol);
   }
   
-  //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
+  //Pour ranger le tableau de couleurs disponibles et mettre n à jour
   n=rangerTabCol(nBilles,tabBille,tabCol);
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
@@ -474,7 +475,7 @@ int main() {
   ecranASprite.setTexture(ecranATexture);
   ecranASprite.setPosition(0,0);
   
-  //Création du sprite d'écran d'information
+  //Création du sprite d'écran d'information, qui sert à afficher l'image de l'écran d'information à partir de l'écran d'accueil
   if(!infoTexture.loadFromFile("info.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
@@ -484,7 +485,7 @@ int main() {
 
 
   
-//Font et texte pour les niveaux
+//Font et texte pour les niveaux et le score
   String numNiveau = "Niveau : " + to_string(nbParties);
   Font font;
   if(!font.loadFromFile("arial.ttf")) {
@@ -498,6 +499,15 @@ int main() {
   text.setCharacterSize(30);
   text.setFillColor(Color::Black);
   text.setPosition(40, 70);
+  
+  String scoreNum = "Score : " + to_string(grenouille.score);
+  
+  Text text2;
+  text2.setFont(font);
+  text2.setString(scoreNum);
+  text2.setCharacterSize(30);
+  text2.setFillColor(Color::Black);
+  text2.setPosition(40, 100);
   
   Clock clock;
 
@@ -590,7 +600,9 @@ while (window.isOpen()) {
       if(collision(billeLance, tabBille[j])){
 	  ++nBilles;
 	  incruster(billeLance, tabBille, j, nBilles);
-	  nBilles=explosion(j, tabBille, nBilles, grenouille.score);
+	  nBilles=explosion(j, tabBille, nBilles, grenouille);
+	  scoreNum = "Score : " + to_string(grenouille.score);
+	  text2.setString(scoreNum);
 	  int nAvant=n;
    	  n=rangerTabCol(nBilles,tabBille,tabCol);
           //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
@@ -649,6 +661,9 @@ while (window.isOpen()) {
   
   //Affichage du niveau 
   window.draw(text);
+  
+  //Affichage du score
+  window.draw(text2);
     
   //Affichage de l'écran final
   if(perdu) {
@@ -687,14 +702,14 @@ while (window.isOpen()) {
 	gagne=false;
 	grenouille.score=0;
 	n=4;
-	 for (int i = 0; i < nBilles; ++i) {
-      tabBille[i].x = 200-(2*RAYONBILLE*i);
-      tabBille[i].y = 40;
-      tabBille[i].rayon = RAYONBILLE;
-      tabBille[i].color = getRandomCol(n, tabCol);
- 	 }
- 	 rejouer=false;
- 	 ecranA=true;
+	for (int i = 0; i < nBilles; ++i) {
+           tabBille[i].x = 200-(2*RAYONBILLE*i);
+           tabBille[i].y = 40;
+           tabBille[i].rayon = RAYONBILLE;
+           tabBille[i].color = getRandomCol(n, tabCol);
+ 	}
+ 	rejouer=false;
+ 	ecranA=true;
   }
   
   
