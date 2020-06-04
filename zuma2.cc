@@ -31,20 +31,30 @@ struct Bille {
   Color color;
 };
 
+/*Structure permettant de rassembler le score et le nombre de billes dans une partie
+*
+*@param nBilles : 
+*@param score : 
+*
+*/
+struct Partie {
+  int nBilles;
+  int score;
+};
+
 /**
 *
 *Structure permettant de modéliser la grenouille
 *
 *@param x L'abscisse de la grenouille
 *@param y L'ordonnée de la grenouille
-*@param score Le score de l'utilisateur durant la partie 
 *@param lance  La bille prête à être lancée par l'utilisateur
 *@param reserve La bille en réserve (la bille qui sera *lancée par l'utilisateur après qu'il ait utilisé la bille lance)
 */
 struct Grenouille{
   float x;
   float y;
-  int score;
+  int nBilles;
   Bille lance;
   Bille reserve;
 };
@@ -276,11 +286,11 @@ void incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 *@return Le nombre de billes retirées du circuit multiplié par 10 afin de calculer le score associé à la disparition
 */
 
-int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
-  for (int i = 0; i < nBilles - (borne1-borne2+1);i++){
+int disparaitre(int j, int borne1, int borne2, Bille tabBille[], Partie partie) {
+  for (int i = 0; i < partie.nBilles - (borne1-borne2+1);i++){
         tabBille[borne2+i]=tabBille[borne1+1+i];
   }
-  return ((borne1-borne2+1)*10);
+  return ((borne1-borne2)*10);
 }
 
 /**
@@ -294,27 +304,32 @@ int disparaitre(int j, int borne1, int borne2, int nBilles, Bille tabBille[]) {
 *@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
 */
 
-int explosion(int j, Bille tabBille[], int nBilles, Grenouille grenouille) {
+Partie explosion(int j, Bille tabBille[], Partie partie) {
   int borne1 = j;
   int borne2 = j;
-  int newNBilles = nBilles;
+  int newNBilles = partie.nBilles;
+  int i = 0;
   do {
       borne1 = j ;
       borne2 = j ;
-      while((borne1+1<nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
+      while((borne1+1<partie.nBilles) &&(tabBille[borne1+1].color == tabBille[j].color)) {
 	    ++borne1;
       }
       while((borne2-1>=0) && (tabBille[borne2-1].color == tabBille[j].color)) {
 	    --borne2;
       }
       if(borne1-borne2>=2) {
-	    newNBilles = nBilles - (borne1-borne2+1);
-	    grenouille.score = disparaitre(j, borne1, borne2, nBilles, tabBille);
-	    nBilles = newNBilles;
+      	    i++;
+	    newNBilles = partie.nBilles - (borne1-borne2+1);
+	    partie.score += disparaitre(j, borne1, borne2, tabBille, partie);
+	    if(i>1) {
+	        partie.score +=10;
+	    }
+	    partie.nBilles = newNBilles;
 	    j = borne2-1;	  
       }
   } while(borne1-borne2>=2);
-  return newNBilles;
+  return partie;
 }
 
 
@@ -331,16 +346,17 @@ int main() {
   Grenouille grenouille;
   grenouille.x = (SCREENW - 32) / 2;
   grenouille.y = (SCREENH - 32) / 2;
-  grenouille.score = 0;
+  
+  //Initialisation de la partie
+  Partie partie;
+  partie.nBilles = 10;
+  partie.score = 0;
   
   
   ////VARIABLES////
 
   //constante nombre de billes créées en début de partie
   const int NBILLESINIT=100;
-
-  //nombre de billes restantes sur le circuit 
-  int nBilles=10;
 
   //vrai quand l'utilisateur a perdu (une bille atteint la fin du circuit) 
   //si vrai, l'écran perdu s'affiche
@@ -391,7 +407,7 @@ int main() {
   double hyp;
   
   //Initialisation de toutes les billes du tableau en début de partie 
-  for (int i = 0; i < nBilles; ++i) {
+  for (int i = 0; i < partie.nBilles; ++i) {
       tabBille[i].x = 200-(2*RAYONBILLE*i);
       tabBille[i].y = 40;
       tabBille[i].rayon = RAYONBILLE;
@@ -399,7 +415,7 @@ int main() {
   }
   
   //Pour ranger le tableau de couleurs disponibles et mettre n à jour
-  n=rangerTabCol(nBilles,tabBille,tabCol);
+  n=rangerTabCol(partie.nBilles,tabBille,tabCol);
 
   //bille permettant de modéliser la bille en déplacement (qui a été lancée par l'utilisateur)
   Bille billeLance;
@@ -500,7 +516,7 @@ int main() {
   text.setFillColor(Color::Black);
   text.setPosition(40, 70);
   
-  String scoreNum = "Score : " + to_string(grenouille.score);
+  String scoreNum = "Score : " + to_string(partie.score);
   
   Text text2;
   text2.setFont(font);
@@ -569,13 +585,13 @@ while (window.isOpen()) {
   double distanceLance = SPEEDLANCE *dt;
      
   //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
-  n=rangerTabCol(nBilles,tabBille,tabCol);
+  n=rangerTabCol(partie.nBilles,tabBille,tabCol);
    
    
    //pour que les billes avancent et attendent lorsqu'une explosion se produit
    if(!ecranA){
- 	 for (int i = nBilles-1; i >=0; --i) {
-    	 if (i==nBilles-1){
+ 	 for (int i = partie.nBilles-1; i >=0; --i) {
+    	 if (i==partie.nBilles-1){
     	 	 tabBille[i].x += distance ;
     	 	 tabBille[i].y = 40 + cos(tabBille[i].x);
    	  } else if (collision(tabBille[i+1],tabBille[i])){
@@ -596,22 +612,22 @@ while (window.isOpen()) {
 	billeReserve.color=echange;
      }
       
-    for (int j = 0;j<nBilles; ++j){
+    for (int j = 0;j<partie.nBilles; ++j){
       if(collision(billeLance, tabBille[j])){
-	  ++nBilles;
-	  incruster(billeLance, tabBille, j, nBilles);
-	  nBilles=explosion(j, tabBille, nBilles, grenouille);
-	  scoreNum = "Score : " + to_string(grenouille.score);
+	  ++partie.nBilles;
+	  incruster(billeLance, tabBille, j, partie.nBilles);
+	  partie =explosion(j, tabBille, partie);
+	  scoreNum = "Score : " + to_string(partie.score);
 	  text2.setString(scoreNum);
 	  int nAvant=n;
-   	  n=rangerTabCol(nBilles,tabBille,tabCol);
+   	  n=rangerTabCol(partie.nBilles,tabBille,tabCol);
           //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
    	  if(nAvant!=n){
 	  	billeReserve.color=getRandomCol(n, tabCol);
    	  }
 	  
 	  //calcul de la victoire ou non de l'utilisateur (true s'il a gagné)
-	  if (nBilles == 0) {
+	  if (partie.nBilles == 0) {
 	     gagne = true;
 	  }
 	  
@@ -642,7 +658,7 @@ while (window.isOpen()) {
   window.draw(grenouilleSprite);
    
   //Affichage billes:
-  for (int i = 0; i < nBilles; ++i) {
+  for (int i = 0; i < partie.nBilles; ++i) {
    	CircleShape shape(tabBille[i].rayon);
     	shape.setPosition(tabBille[i].x-billeLance.rayon, tabBille[i].y-billeLance.rayon);
     	shape.setFillColor(tabBille[i].color);
@@ -661,9 +677,9 @@ while (window.isOpen()) {
   
   //Affichage du niveau 
   window.draw(text);
-  
   //Affichage du score
   window.draw(text2);
+  
     
   //Affichage de l'écran final
   if(perdu) {
@@ -688,21 +704,21 @@ while (window.isOpen()) {
   	if(gagne){
   		nbParties+=1;
   		SPEED+=5;
- 		nBilles=10+nbParties*2;
+ 		partie.nBilles=10+nbParties*2;
  		numNiveau = "Niveau : " + to_string(nbParties);
  		text.setString(numNiveau);
   	}else if(perdu){
   		nbParties=1;
   		SPEED=10;
-  		nBilles=10;
+  		partie.nBilles=10;
  		numNiveau = "Niveau : " + to_string(nbParties);
  		text.setString(numNiveau);
   	}
 	perdu=false;
 	gagne=false;
-	grenouille.score=0;
+	partie.score=0;
 	n=4;
-	for (int i = 0; i < nBilles; ++i) {
+	for (int i = 0; i < partie.nBilles; ++i) {
            tabBille[i].x = 200-(2*RAYONBILLE*i);
            tabBille[i].y = 40;
            tabBille[i].rayon = RAYONBILLE;
