@@ -1,3 +1,6 @@
+//Jeu réalisé dans le cadre du cours Projet d'initiation à l'ingénierie logiciel du parcours CMI Informatique par Hafsa Demnati, Éléa Jacquin et Marie-Almina Gindre.
+
+
 #include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
@@ -198,7 +201,6 @@ int rangerTabCol(int nBilles, Bille tabBille[],char tabCol[]){
   return comp;
 }
 
-
 /**
 *Fonction permettant de savoir si une bille est entrée en collision avec une autre bille
 *
@@ -207,7 +209,6 @@ int rangerTabCol(int nBilles, Bille tabBille[],char tabCol[]){
 *
 *@return un booléen, true si les billes sont entrées en collision, false sinon
 */
-
 bool collision(Bille bille1, Bille bille2) {
   return !( (bille1.rayon + bille2.rayon)*(bille1.rayon + bille2.rayon) <= (bille1.x - bille2.x)*(bille1.x - bille2.x) + (bille1.y - bille2.y)*(bille1.y - bille2.y) );
 }
@@ -220,7 +221,6 @@ bool collision(Bille bille1, Bille bille2) {
 *@param i rang auquel la bille va être incrustée
 *@param nBilles le nombre de billes présentes sur le circuit
 */
-
 int incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
   int newPlace = i;
   if (billeLance.x-tabBille[i].x >= 0){
@@ -287,7 +287,6 @@ int incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 *
 *@return Le nombre de billes retirées du circuit multiplié par 10 afin de calculer le score associé à la disparition
 */
-
 int disparaitre(int j, int borne1, int borne2, Bille tabBille[], Partie partie) {
   for (int i = 0; i < partie.nBilles - (borne1-borne2+1);i++){
         tabBille[borne2+i]=tabBille[borne1+1+i];
@@ -305,7 +304,6 @@ int disparaitre(int j, int borne1, int borne2, Bille tabBille[], Partie partie) 
 *
 *@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
 */
-
 Partie explosion(int j, Bille tabBille[], Partie partie) {
   int borne1 = j;
   int borne2 = j;
@@ -333,7 +331,6 @@ Partie explosion(int j, Bille tabBille[], Partie partie) {
   } while(borne1-borne2>=2);
   return partie;
 }
-
 
 
 int main() {
@@ -378,7 +375,7 @@ int main() {
   bool info=false;
 
   //Entier modélisant la vitesse des billes sur le circuit
-  int SPEED=10;
+  int speed=10;
 
   //Constante modélisant la vitesse de la bille lancée par l'utilisateur
   const int SPEEDLANCE=500;
@@ -388,7 +385,6 @@ int main() {
   
   //Nombre de parties jouées par le joueur
   int nbParties=1;
-
 
   //caractères associés aux couleurs
   char tabCol[4];
@@ -433,7 +429,6 @@ int main() {
   billeReserve.y = (SCREENH+510)/2;
   billeReserve.color = getRandomCol(n, tabCol);
  
- 
   //Booléen qui prend la valeur true lorsqu'une bille lance est en déplacement (ce qui sert à empêcher l'utilisateur de modifier sa direction lorsqu'elle est déjà lancée)
   bool deplacer = false;
   
@@ -467,7 +462,6 @@ int main() {
   grenouilleSprite.setTexture(grenouilleTexture);
   grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
     
-    
   //Création du sprite perdu, qui sert à afficher l'image de fin lorsque l'utilisateur a perdu
   if(!perduTexture.loadFromFile("perdu.png")) {
    	window.close();
@@ -484,7 +478,6 @@ int main() {
   victoireSprite.setTexture(victoireTexture);
   victoireSprite.setPosition(0,0);
 
-
   //Création du sprite d'écran d'accueil, qui sert à afficher l'image de l'écran d'accueil en début de partie
   if(!ecranATexture.loadFromFile("ecranAccueil.png")) {
    	window.close();
@@ -500,8 +493,6 @@ int main() {
   }
   infoSprite.setTexture(infoTexture);
   infoSprite.setPosition(0,0);
-
-
   
 //Font et texte pour les niveaux et le score
   String numNiveau = "Niveau : " + to_string(nbParties);
@@ -527,6 +518,7 @@ int main() {
   text2.setFillColor(Color::Black);
   text2.setPosition(40, 100);
   
+  
   Clock clock;
 
 while (window.isOpen()) {
@@ -551,7 +543,6 @@ while (window.isOpen()) {
         rejouer=true;
     }  
       
-    
     //Pour jouer a partir de l'écran d'accueil
      if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<385))and ((0<event.mouseButton.y)and(event.mouseButton.y<165))){
         ecranA=false;
@@ -579,16 +570,14 @@ while (window.isOpen()) {
     }
     
     
-    
   }//fin de while window.pollEvent
 
   float dt = clock.restart().asSeconds();
-  double distance = SPEED*dt;
+  double distance = speed*dt;
   double distanceLance = SPEEDLANCE *dt;
      
   //Pour ranger le tableau de couleurs disponibles et mettre a jour n 
   n=rangerTabCol(partie.nBilles,tabBille,tabCol);
-   
    
    //pour que les billes avancent et attendent lorsqu'une explosion se produit
    if(!ecranA){
@@ -623,7 +612,7 @@ while (window.isOpen()) {
 	  text2.setString(scoreNum);
 	  int nAvant=n;
    	  n=rangerTabCol(partie.nBilles,tabBille,tabCol);
-          //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
+      //pour retirer la couleur de la bille si l'explosion a retiré une couleur du circuit
    	  if(nAvant!=n){
 	  	billeReserve.color=getRandomCol(n, tabCol);
    	  }
@@ -682,7 +671,6 @@ while (window.isOpen()) {
     
   //Affichage du score
   window.draw(text2);
-      
 
   //Affichage de l'écran final
   if(gagne) {
@@ -700,7 +688,6 @@ while (window.isOpen()) {
 	text2.setPosition(40, 100);
 	partie.score = 0;
 	}
-
   
   //affichage de l'écran d'accueil 
   if(ecranA){
@@ -712,18 +699,17 @@ while (window.isOpen()) {
  	 window.draw(infoSprite);
   }
   
-  
-  //Remise à zero des variables nécéssaire pour rejouer et met a jour le niveau de difficulté
+  //Remise à zero des variables nécéssaire pour rejouer et met a jour la difficulté suivant le niveau
   if(rejouer){
   	if(gagne){
   		nbParties+=1;
-  		SPEED+=5;
+  		speed+=5;
  		partie.nBilles=10+nbParties*2;
  		numNiveau = "Niveau : " + to_string(nbParties);
  		text.setString(numNiveau);
   	}else if(perdu){
   		nbParties=1;
-  		SPEED=10;
+  		speed=10;
   		partie.nBilles=10;
  		numNiveau = "Niveau : " + to_string(nbParties);
  		text.setString(numNiveau);
@@ -743,7 +729,6 @@ while (window.isOpen()) {
  	rejouer=false;
  	ecranA=true;
   }
-  
   
   window.display();
 }//fin de la while de window.isOpen
