@@ -36,8 +36,8 @@ struct Bille {
 
 /*Structure permettant de rassembler le score et le nombre de billes dans une partie
 *
-*@param nBilles : 
-*@param score : 
+*@param nBilles : Le nombre de billes présentes dans la partie
+*@param score : Le score dans la partie
 *
 */
 struct Partie {
@@ -57,7 +57,6 @@ struct Partie {
 struct Grenouille{
   float x;
   float y;
-  int nBilles;
   Bille lance;
   Bille reserve;
 };
@@ -110,7 +109,7 @@ Color assignementCol(char col) {
 *Fonction permettant de tirer une couleur aléatoire
 *
 *@param n Un entier, le nombre de couleur encore disponible dans le circuit
-*@param  tabCol un tableau de caractères représentants les couleurs existantes 
+*@param tabCol un tableau de caractères représentants les couleurs existantes 
 *
 *@return Une couleur tirée au hasard parmi celles encore disponibles
 */
@@ -282,8 +281,8 @@ int incruster(Bille billeLance, Bille tabBille[],int i, int nBilles){
 *@param j Le rang de la bille qui a été lancée et qui provoque une potentielle explosion
 *@param borne1 Le nombre de billes de la même couleur que la bille lancée se plaçant avant dans le tableau
 *@param borne2 Le nombre de billes de la même couleur que la bille lancée se plaçant après dans le tableau
-*@param nBilles Le nombre de billes présentes sur le circuit
 *@param tabBille[] Le tableau répertoriant toutes les billes du circuit 
+*@param partie La partie en cours
 *
 *@return Le nombre de billes retirées du circuit multiplié par 10 afin de calculer le score associé à la disparition
 */
@@ -298,8 +297,7 @@ int disparaitre(int j, int borne1, int borne2, Bille tabBille[], Partie partie) 
 *Fonction permettant de provoquer une explosion dans le circuit, et une suite de combos s'il y en a 
 *
 *@param j Le rang de la bille qui a été lancée et qui provoque une potentielle explosion
-*@param score Le score du joueur durant la partie, mis à jour si une explosion a eu lieu
-*@param nBilles le nombre de billes présentes sur le circuit
+*@param partie La partie en cours comportant le score et le nombre de bille à mettre à jour
 *@param tabBille[] le tableau répertoriant toutes les billes du circuit
 *
 *@return newNBilles Le nombre de billes encore sur le circuit après une explosion (si une explosion a été effectuée, celui-ci diminue, sinon il reste inchangé)
@@ -494,7 +492,7 @@ int main() {
   infoSprite.setTexture(infoTexture);
   infoSprite.setPosition(0,0);
   
-//Font et texte pour les niveaux et le score
+  //Font et texte pour les niveaux et le score
   String numNiveau = "Niveau : " + to_string(nbParties);
   Font font;
   if(!font.loadFromFile("arial.ttf")) {
@@ -526,7 +524,7 @@ while (window.isOpen()) {
   Event event;
   while (window.pollEvent(event)) {
 
-	 //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
+    //Pour récupérer les coordonnées du clic de la souris (afin de déplacer la bille lance) lorsqu'il n'y a pas de bille déjà lancée
     if ((event.type == sf::Event::MouseButtonPressed) and (!deplacer)and !ecranA and !rejouer and !info and !gagne and !perdu){
         deplacer=true;
         sourisx = event.mouseButton.x;
@@ -544,7 +542,7 @@ while (window.isOpen()) {
     }  
       
     //Pour jouer a partir de l'écran d'accueil
-     if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<385))and ((0<event.mouseButton.y)and(event.mouseButton.y<165))){
+    if ((event.type == sf::Event::MouseButtonPressed) and ecranA and ((0<event.mouseButton.x) and (event.mouseButton.x<385))and ((0<event.mouseButton.y)and(event.mouseButton.y<165))){
         ecranA=false;
     }  
     
@@ -555,15 +553,15 @@ while (window.isOpen()) {
     }
     
     //Pour quitter les infos
-	if ((event.type == sf::Event::MouseButtonPressed) and info and ((SCREENW-87<event.mouseButton.x) and (event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y)and(event.mouseButton.y<87))){
-        ecranA=true;
-        info=false;
+   if ((event.type == sf::Event::MouseButtonPressed) and info and ((SCREENW-87<event.mouseButton.x) and (event.mouseButton.x<SCREENW)) and ((0<event.mouseButton.y)and(event.mouseButton.y<87))){
+            ecranA=true;
+            info=false;
     }
 
     //si l'on appuie sur la barre espace, les couleurs des billes de réserve et prête à être lancée sont échangées
     if (event.type == Event::KeyPressed) {
 	if (event.key.code == sf::Keyboard::Space){
-         Color echange = billeLance.color;
+             Color echange = billeLance.color;
 	     billeLance.color= billeReserve.color;
 	     billeReserve.color=echange;
 	}
@@ -582,14 +580,14 @@ while (window.isOpen()) {
    //pour que les billes avancent et attendent lorsqu'une explosion se produit
    if(!ecranA){
  	 for (int i = partie.nBilles-1; i >=0; --i) {
-    	 if (i==partie.nBilles-1){
+    	   if (i==partie.nBilles-1){
     	 	 tabBille[i].x += distance ;
     	 	 tabBille[i].y = 40 + cos(tabBille[i].x);
-   	  } else if (collision(tabBille[i+1],tabBille[i])){
+   	   } else if (collision(tabBille[i+1],tabBille[i])){
     	 	 tabBille[i].x += distance;
    	  	     tabBille[i].y = 40 + cos(tabBille[i].x);
   	   }
-	  }
+	 }
   }
 
   if (deplacer and !ecranA and !info and !perdu and !gagne){
@@ -687,7 +685,7 @@ while (window.isOpen()) {
 	text2.setFillColor(Color::Black);
 	text2.setPosition(40, 100);
 	partie.score = 0;
-	}
+  }
   
   //affichage de l'écran d'accueil 
   if(ecranA){
@@ -717,8 +715,8 @@ while (window.isOpen()) {
 	perdu=false;
 	gagne=false;
 	partie.score=0;
-    scoreNum = "Score : " + to_string(partie.score);
-    text2.setString(scoreNum);
+        scoreNum = "Score : " + to_string(partie.score);
+        text2.setString(scoreNum);
 	n=4;
 	for (int i = 0; i < partie.nBilles; ++i) {
            tabBille[i].x = 200-(2*RAYONBILLE*i);
