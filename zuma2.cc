@@ -679,16 +679,28 @@ while (window.isOpen()) {
   
   //Affichage du niveau 
   window.draw(text);
+    
   //Affichage du score
   window.draw(text2);
-  
-    
+      
+
   //Affichage de l'écran final
-  if(perdu) {
+  if(gagne) {
+	window.draw(victoireSprite);
+	text2.setPosition(40,50);
+	window.draw(text2);
+  	text2.setPosition(40, 100);
+	partie.score = 0;
+	} else if (perdu) {
 	window.draw(perduSprite);
-  } else if(gagne) {
-    	window.draw(victoireSprite);
-  } 
+	text2.setFillColor(Color::White);
+	text2.setPosition(40, 60);
+	window.draw(text2);
+	text2.setFillColor(Color::Black);
+	text2.setPosition(40, 100);
+	partie.score = 0;
+	}
+
   
   //affichage de l'écran d'accueil 
   if(ecranA){
