@@ -453,7 +453,7 @@ int main() {
   Sprite infoSprite;
   
   //Création du sprite grenouille, qui sert à afficher l'image de la grenouille
-  if(!grenouilleTexture.loadFromFile("Grenouille.png")) {
+  if(!grenouilleTexture.loadFromFile("images/Grenouille.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
@@ -461,7 +461,7 @@ int main() {
   grenouilleSprite.setPosition(grenouille.x-50, grenouille.y-200);
     
   //Création du sprite perdu, qui sert à afficher l'image de fin lorsque l'utilisateur a perdu
-  if(!perduTexture.loadFromFile("perdu.png")) {
+  if(!perduTexture.loadFromFile("images/perdu.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
@@ -469,7 +469,7 @@ int main() {
   perduSprite.setPosition(0,0);
   
   //Création du sprite victoire, qui sert à afficher l'image de fin lorsque l'utilisateur a gagné
-  if(!victoireTexture.loadFromFile("victoire.png")) {
+  if(!victoireTexture.loadFromFile("images/victoire.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
@@ -477,7 +477,7 @@ int main() {
   victoireSprite.setPosition(0,0);
 
   //Création du sprite d'écran d'accueil, qui sert à afficher l'image de l'écran d'accueil en début de partie
-  if(!ecranATexture.loadFromFile("ecranAccueil.png")) {
+  if(!ecranATexture.loadFromFile("images/ecranAccueil.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
@@ -485,7 +485,7 @@ int main() {
   ecranASprite.setPosition(0,0);
   
   //Création du sprite d'écran d'information, qui sert à afficher l'image de l'écran d'information à partir de l'écran d'accueil
-  if(!infoTexture.loadFromFile("info.png")) {
+  if(!infoTexture.loadFromFile("images/info.png")) {
    	window.close();
     	cout <<"ERROR : texture failed to load.";
   }
